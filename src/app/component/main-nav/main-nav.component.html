@@ -1,0 +1,87 @@
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches" *ngIf="shouldRun">
+    <mat-toolbar color="primary" class="example-toolbar">
+        <!-- <button mat-icon-button (click)="snav.toggle()">
+          <fa-icon [icon]="faAlignLeft"></fa-icon>
+        </button>
+        <h1 class="example-app-name" style="margin:auto;">ITracker App</h1> -->
+        <mat-toolbar-row>
+            <button mat-icon-button (click)="snav.toggle()">
+                <fa-icon [icon]="faAlignLeft"></fa-icon>
+            </button>
+            <h1 class="example-app-name" style="margin:auto;">ITracker App</h1>
+            <span class="example-spacer"></span>
+            <mat-form-field *ngIf="login" class="tamaño">
+                <input matInput (keydown.enter)="onKeydown($event)" placeholder="Buscar Dirección" ngx-google-places-autocomplete [options]='options' #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" [(ngModel)]="valor" />
+                <button mat-button *ngIf="valor" matSuffix mat-icon-button aria-label="Clear" (click)="borrar()">
+                        <fa-icon aria-hidden="false" [icon]="faTimesCircle"></fa-icon>
+                </button>
+            </mat-form-field>
+            <fa-icon *ngIf="login" class="example-icon" aria-hidden="false" [icon]="faSearch"></fa-icon>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-sidenav-container hasBackdrop autosize class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+            <hr>
+            <mat-nav-list *ngIf="!login">
+                <a mat-list-item routerLink="/login">
+                    <fa-icon [icon]="faPowerOff"></fa-icon>
+                    <span style="padding-left: 15px;">Acceso Clientes</span>
+                </a>
+            </mat-nav-list>
+            <mat-nav-list *ngIf="login">
+                <a mat-list-item (click)="mostrarConductores()">
+                    <fa-icon [icon]="faCarAlt"></fa-icon>
+                    <span style="padding-left: 15px;">Conductores</span>
+                </a>
+            </mat-nav-list>
+            <!--Conductores -->
+            <!-- Iteramos a los conductores en una variable conductor donde podemos acceder a sus propiedades -->
+            <div *ngFor="let conductor of conductores">
+                <!-- Este item de la lista se muestra solo si login es TRUE -->
+                <mat-nav-list *ngIf="login">
+                    <a mat-list-item *ngIf="mostrar && login" (click)="seguir(conductor)">
+                        <fa-icon [icon]="faUser" style="padding-left: 17px"></fa-icon>
+                        <span style="padding-left: 15px;">{{conductor.nombre}}</span>
+                        <fa-icon *ngIf="!conductor.online" [icon]="faToggleOff" style="padding-left: 17px"></fa-icon>
+                        <fa-icon *ngIf="conductor.online" [icon]="faToggleOn" style="padding-left: 17px"></fa-icon>
+                    </a>
+                </mat-nav-list>
+
+            </div>
+            <!--Conductores -->
+            <hr *ngIf="login">
+            <mat-nav-list *ngIf="login">
+                <a mat-list-item>
+                    <fa-icon [icon]="faComments"></fa-icon>
+                    <span matBadge="22" matBadgePosition="above after" matBadgeColor="warn" style="padding-left: 15px;">Chat</span>
+                </a>
+            </mat-nav-list>
+            <mat-nav-list *ngIf="!login">
+                <a mat-list-item>
+                    <fa-icon [icon]="faPowerOff"></fa-icon>
+                    <span style="padding-left: 15px;">Servicios</span>
+                </a>
+            </mat-nav-list>
+            <mat-nav-list *ngIf="login">
+                <a mat-list-item href="tel:+56948598810">
+                    <fa-icon [icon]="faPhone"></fa-icon>
+                    <span style="padding-left: 15px;">LLamar</span>
+                </a>
+            </mat-nav-list>
+            <mat-nav-list position="end" *ngIf="login">
+                <a mat-list-item (click)="logout()">
+                    <fa-icon [icon]="faPowerOff"></fa-icon>
+                    <span style="padding-left: 15px;">Logout</span>
+                </a>
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <div class="">
+                <router-outlet></router-outlet>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

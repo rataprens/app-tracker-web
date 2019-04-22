@@ -1,0 +1,63 @@
+<div class=" pad-10">
+    <div class="container text-center">
+        <!-- TITULO -->
+        <h3>
+            Mapa {{nombre}}
+            <small *ngIf="nombreConductor" class="animated fadeIn">siguiendo a </small>
+            <!-- <mat-chip *ngIf="nombreConductor" class="animated fadeIn">{{nombreConductor}}</mat-chip> -->
+            <span *ngIf="nombreConductor" class="badge badge-pill badge-primary animated fadeIn">{{nombreConductor}}</span>
+
+        </h3>
+        <!-- FIN TITULO -->
+
+        <!-- SECCION DEL MAPA -->
+        <agm-map [latitude]="lat" [longitude]="lng" [zoom]="17">
+            <agm-direction *ngIf="isDirection" [origin]="origin" [destination]="destination">
+            </agm-direction>
+            <span *ngIf="!isDirection">
+                    <agm-marker *ngFor="let conductor of conductores" [latitude]="conductor.lat" [longitude]="conductor.lng">
+                            <agm-info-window>{{conductor.nombre}}</agm-info-window>
+                        </agm-marker>
+            </span>
+        </agm-map>
+        <!-- FIN SECCION DEL MAPA -->
+
+        <!-- SECCION DE BOTONES -->
+        <button mat-raised-button color="warn" type="button" (click)="dejarDeSeguir()" *ngIf="nombreConductor" class="animated fadeIn faster" style="margin:10px">
+            Dejar de seguir 
+            <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="compartirRuta()" *ngIf="nombreConductor && !compartir && online" class=" animated fadeIn faster" style="margin:10px">
+            Compartir Ruta 
+            <fa-icon style="padding-left:5px" [icon]="faShareSquare"></fa-icon>
+        </button>
+        <button mat-raised-button color="warn" *ngIf="compartir && nombreConductor && online" type="button" (click)="dejarDeCompartir()" class="animated fadeIn faster" style="margin:10px">
+                Dejar de compartir ruta
+                <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
+        </button>
+
+        <button mat-raised-button color="primary" *ngIf="claveCompartir && compartir" mat-button [matMenuTriggerFor]="menu1" (click)="openMyMenu()">
+            Ver Codigo de Ruta
+            <fa-icon style="padding-left:5px" [icon]="faBinoculars"></fa-icon>
+        </button>
+        <mat-menu #menu1="matMenu">
+            <button mat-menu-item ngxClipboard [cbContent]="claveCompartir" (cbOnSuccess)="isCopiado = true" (click)="copy() " class="animated fadeIn faster">
+                    <fa-icon *ngIf="claveCompartir" [icon]="faKey"></fa-icon>
+                    {{claveCompartir}}
+                </button>
+        </mat-menu>
+        <button matBadge="22" matBadgePosition="above after" matBadgeColor="warn" mat-raised-button color="primary" type="button" (click)="abrirChat()" *ngIf="nombreConductor" class="animated fadeIn faster" style="margin:10px">
+            Chat 
+            <fa-icon style="padding-left:5px" [icon]="faComments"></fa-icon>
+        </button>
+        <button *ngIf="nombreConductor && !isDirection" mat-raised-button color="warn" type="button" (click)="getDirection()" class="animated fadeIn faster" style="margin:10px">
+                Calcular Ruta 
+                <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
+        </button>
+        <button *ngIf="nombreConductor && isDirection" mat-raised-button color="warn" type="button" (click)="exitDirection()" class="animated fadeIn faster" style="margin:10px">
+                Dejar de Calcular Ruta 
+                <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
+        </button>
+        <!-- FIN SECCION DE BOTONES -->
+    </div>
+</div>
