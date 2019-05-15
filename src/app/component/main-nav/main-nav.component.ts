@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import {faTimesCircle, faSearch, faCoffee,faAlignJustify,faPowerOff,faCarAlt,faComments,faUser,faPhone,faAlignLeft, faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+import {faFileAlt,faTimesCircle, faSearch, faCoffee,faAlignJustify,faPowerOff,faCarAlt,faComments,faUser,faPhone,faAlignLeft, faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
 import { LoginVerificacionService } from 'src/app/services/login-verificacion.service';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./main-nav.component.css']
 })
 export class MainNavComponent implements OnDestroy{
+  faFileAlt = faFileAlt;
   faTimesCircle = faTimesCircle;
   valor:string;
   faSearch = faSearch;
@@ -40,14 +41,19 @@ export class MainNavComponent implements OnDestroy{
   mostrar:boolean = false;
   nombre:string;
   clave:string;
-  conductores: any;
+  conductores: any[];
   seguirA:boolean = false;
   online: boolean = false;
   conductoresSub:Subscription;
   mostrarSub: Subscription;
-
+  pedidos: any[];
+  pedidosSub: Subscription;
   lat:number;
   lng:number;
+
+  conductoresConectados: any[];
+  totalConductores:number;
+  totalConectados:number;
 
   private _mobileQueryListener: () => void;
 
@@ -71,10 +77,15 @@ export class MainNavComponent implements OnDestroy{
       this.nombre = localStorage.getItem('nombre');
       this.clave = localStorage.getItem('clave');
         
-      this.conductoresSub = this.db.collection(`${this.nombre}`).doc('movil').collection(`usuarios`).valueChanges().subscribe(data =>{
-        console.log(data);
+      this.conductoresSub = this.db.collection(`${this.nombre}`).doc('movil').collection(`usuarios`).valueChanges().subscribe((data:any[]) =>{
         this.conductores = data;
+        this.totalConductores = this.conductores.length;
+        
+        this.conductoresConectados = this.conductores.filter(conductor => conductor.online === true);
+        this.totalConectados = this.conductoresConectados.length;
       });
+
+      
 
     }
 
@@ -199,6 +210,9 @@ borrar(){
         this.conductoresSub.unsubscribe();
         if(this.mostrarSub){
           this.mostrarSub.unsubscribe();
+        }
+        if(this.conductoresSub){
+          this.conductoresSub.unsubscribe();
         }
         localStorage.removeItem('nombre');
         localStorage.removeItem('clave');

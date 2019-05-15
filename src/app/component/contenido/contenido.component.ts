@@ -1,18 +1,15 @@
 import { Component, ViewChild} from '@angular/core';
 
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Observable, Subscription } from 'rxjs';
-import { Delivery } from '../../interfaces/delivery';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { LoginVerificacionService } from 'src/app/services/login-verificacion.service';
 import { SeguirService } from 'src/app/services/seguir.service';
 import {faBinoculars, faTimesCircle, faShareSquare, faComments, faKey } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
-import * as firebase from 'firebase';
 import { VerificarService } from '../../services/verificar.service';
 
 import {MatMenuTrigger} from '@angular/material'
-import { Address } from 'ngx-google-places-autocomplete/objects/address';
 import { BuscarService } from '../../services/buscar.service';
 
 import { ClipboardService } from 'ngx-clipboard'
@@ -60,6 +57,28 @@ export class ContenidoComponent {
   origin:any;
   destination:any;
   directionSub:Subscription;
+
+  icon = {
+    url: 'https://cdn4.iconfinder.com/data/icons/map-pins-2/256/13-512.png',
+    scaledSize: {
+      width: 50,
+      height: 70
+    }
+  }
+
+  labelOptions = {
+    color: 'blue',
+    fontFamily: '',
+    fontSize: '10px',
+    fontWeight: 'bold',
+    letterSpacing: 'o.5px'
+  }
+
+  direccion:string;
+  nombreCliente:string;
+  numeroTelefonoCliente:number;
+  montoTotalPagar:number;
+  tipoPedido:string;
   
   
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
@@ -165,6 +184,56 @@ export class ContenidoComponent {
  
    }
 
+   //FIN CONSTRUCTOR
+
+   //METODOS
+          
+   asignarPedido(){
+    Swal.fire({
+      title: "Debe Ingresar los siguientes datos",
+      text: `Asignara el siguiente pedido a ${this.nombreConductor}`,
+      type: "info",
+      position: "top",
+      showCancelButton: true,
+      cancelButtonColor: '#d33',
+      customClass: {
+        container: 'container-class'
+      },
+      focusConfirm: true,
+      heightAuto: true,
+      allowOutsideClick: false,
+      html: `<input id="direccion" class="swal2-input" placeholder="Dirección">`+
+            `<input id="nombreCliente" class="swal2-input" placeholder="Nombre de cliente">`+
+            `<input id="numeroTelefono" class="swal2-input" placeholder="Numero de telefono">` +
+            `<input id="repartidor" class="swal2-input" value="${this.nombreConductor}">`+
+            `<input id="tipoPedido" class="swal2-input" placeholder="tipo pedido">` +
+            `<input id="montoTotal" class="swal2-input" placeholder="Total a Pagar">`
+    }).then((result)=>{
+          if(result.value === true){
+              console.log("Aceptar Clickeado");
+              this.direccion = (<HTMLInputElement>document.getElementById('direccion')).value;
+              this.nombreCliente = (<HTMLInputElement>document.getElementById('nombreCliente')).value;
+              this.numeroTelefonoCliente = parseInt(((<HTMLInputElement>document.getElementById('numeroTelefono')).value));
+              this.tipoPedido = (<HTMLInputElement>document.getElementById('tipoPedido')).value;
+              this.montoTotalPagar = parseInt(((<HTMLInputElement>document.getElementById('montoTotal')).value));
+              console.log(this.direccion, this.nombreCliente, this.numeroTelefonoCliente, this.tipoPedido, this.montoTotalPagar);
+              this.db.collection(`${this.nombre}`).doc(`movil`).collection(`usuarios`).doc(`${this.claveConductor}`).collection('pedidos').add({
+                  direccion: this.direccion,
+                  nombre: this.nombreCliente,
+                  entregado: false,
+                  numeroTelefono: this.numeroTelefonoCliente,
+                  repartidor: this.nombreConductor,
+                  tipoPedido: this.tipoPedido,
+                  montoTotal: this.montoTotalPagar
+              });
+          }
+          if(result.dismiss){
+              console.log("Cancelar Clickeado");
+          }
+    });
+   }
+  
+    
    getDirection() {
     
     this.isDirection = true;
@@ -258,7 +327,8 @@ export class ContenidoComponent {
           title: "Compartir este codigo con sus clientes",
           text: `${docRef.id}`,
           type: "success",
-          position: "top"
+          position: "top",
+          allowOutsideClick: false
           
         }).then(()=>{
 
@@ -304,7 +374,8 @@ export class ContenidoComponent {
        type: "warning",
        position: "top",
        showCancelButton: true,
-       cancelButtonColor: '#d33'
+       cancelButtonColor: '#d33',
+       allowOutsideClick: false
      }).then((result)=>{
 
       if(result.value){
@@ -351,6 +422,9 @@ export class ContenidoComponent {
       
    }
 
+   abrirMarcador(){
+     console.log("marcadorClickeado");
+   }
 
 
 }

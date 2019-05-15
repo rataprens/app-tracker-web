@@ -33,7 +33,7 @@
             <mat-nav-list *ngIf="login">
                 <a mat-list-item (click)="mostrarConductores()">
                     <fa-icon [icon]="faCarAlt"></fa-icon>
-                    <span style="padding-left: 15px;">Conductores</span>
+                    <span style="padding-left: 15px;">Conductores <span>( {{totalConectados}} / {{totalConductores}} )</span></span>
                 </a>
             </mat-nav-list>
             <!--Conductores -->
@@ -48,9 +48,28 @@
                         <fa-icon *ngIf="conductor.online" [icon]="faToggleOn" style="padding-left: 17px"></fa-icon>
                     </a>
                 </mat-nav-list>
-
             </div>
             <!--Conductores -->
+            <!-- Fin Conductores-->
+
+            <!--Pedidos-->
+            <!--             <mat-nav-list *ngIf="login">
+                <a mat-list-item (click)="mostrarPedidos()">
+                    <fa-icon [icon]="faFileAlt"></fa-icon>
+                    <span style="padding-left: 15px;">Pedidos</span>
+                </a>
+            </mat-nav-list>
+            <div *ngFor="let pedido of pedidos">
+                <mat-nav-list *ngIf="login">
+                        <a mat-list-item *ngIf="mostrarPedidos && login" (click)="mostrarDetalles(pedido)">
+                            <fa-icon [icon]="faUser" style="padding-left: 17px"></fa-icon>
+                            <span style="padding-left: 15px;">{{conductor.nombre}}</span>
+                            <fa-icon *ngIf="!conductor.online" [icon]="faToggleOff" style="padding-left: 17px"></fa-icon>
+                            <fa-icon *ngIf="conductor.online" [icon]="faToggleOn" style="padding-left: 17px"></fa-icon>
+                        </a>
+                </mat-nav-list>
+            </div> -->
+            <!--Fin Pedidos-->
             <hr *ngIf="login">
             <mat-nav-list *ngIf="login">
                 <a mat-list-item>

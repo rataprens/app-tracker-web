@@ -31,6 +31,8 @@ import { BuscarService } from './services/buscar.service';
 import { ClipboardModule } from 'ngx-clipboard';
 import { AgmDirectionModule } from 'agm-direction';
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
