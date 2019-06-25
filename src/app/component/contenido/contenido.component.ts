@@ -1,11 +1,11 @@
-import { Component, ViewChild} from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginVerificacionService } from 'src/app/services/login-verificacion.service';
 import { SeguirService } from 'src/app/services/seguir.service';
-import {faBinoculars, faTimesCircle, faShareSquare, faComments, faKey } from '@fortawesome/free-solid-svg-icons';
+import {faBinoculars, faTimesCircle, faSearch,faShareSquare, faComments, faKey, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import { VerificarService } from '../../services/verificar.service';
 
@@ -13,6 +13,22 @@ import {MatMenuTrigger} from '@angular/material'
 import { BuscarService } from '../../services/buscar.service';
 
 import { ClipboardService } from 'ngx-clipboard'
+import { AuthService } from '../../services/auth.service';
+
+import { CambiarTemaService } from '../../services/cambiar-tema.service';
+import { EliminarMarkerService } from '../../services/eliminar-marker.service';
+import { VerDireccionClienteService } from '../../services/ver-direccion-cliente.service';
+
+interface InfoEmpresa {
+  direccion: string,
+  lat: number,
+  lng: number,
+  nombre: string,
+  numeroTelefono: number,
+  password: string,
+  tipo: string,
+  tipoPlan: string
+}
 
 @Component({
   selector: 'app-contenido',
@@ -22,41 +38,72 @@ import { ClipboardService } from 'ngx-clipboard'
 export class ContenidoComponent {
 
   //Variables declaradas
+
+  breakpoint: number;
+
+  //FONT AWESOME
+  faSearch = faSearch;
+  faMapMarkedAlt = faMapMarkedAlt;
   faBinoculars = faBinoculars;
   faKey = faKey;
   faComments = faComments;
   faShareSquare = faShareSquare;
   faTimesCircle = faTimesCircle;
+  //CONDUCTOR
+  nombreConductor: string;
+  apellidoConductor: string;
+  claveConductor: string;
+  compartir: boolean = false;
+  claveCompartir: string;
+  conductores:any[];
+  online:boolean;
+  //SUBSCRIPCIONES
+  conductoresSub:Subscription;
+  directionSub:Subscription;
+  //OTRAS VARIABLES
   siguiendo:any = false;
   login:boolean= false;
-  deliverys: any[] = [];
   lat: number = 51.678418;
   lng: number = 7.809007;
   private nombre:string;
   private clave:string;
-  nombreConductor: string = null;
-  claveConductor: string = null;
   init:boolean = false;
   documentId : AngularFirestoreCollection<any>;
-  claveCompartir: string;
-  compartir: boolean = false;
-  conductores:any[];
-  conductoresSub:Subscription;
-  online:boolean;
   isCopiado:boolean = false;
   isDirection:boolean = false;
   latBuscar:number;
   lngBuscar:number;
-
   formatAddress = "";
-
   options= {
     componentRestrictions: { country: 'CL' }
   }
-  
+  pedidos:any[];
+  isBuscar:boolean = false;
+  pedidosActivos:any[];
+  estado:string;
   origin:any;
   destination:any;
-  directionSub:Subscription;
+  pedidoLat: number;
+  pedidoLng: number;
+  verDireccionActivado: boolean = false;
+  public renderOptions = {
+    suppressMarkers: true,
+  }
+  waypoints: any[] = [];
+  public markerOptions = {
+    origin: {
+        draggable: false,
+        opacity: 0
+    },
+    destination: {
+        opacity: 1,
+        draggable: true
+    },
+    waypoints: {
+      draggable:false,
+      icon: ""
+    }
+  }
 
   icon = {
     url: 'https://cdn4.iconfinder.com/data/icons/map-pins-2/256/13-512.png',
@@ -65,7 +112,7 @@ export class ContenidoComponent {
       height: 70
     }
   }
-
+  buscarDireccion:boolean = false;
   labelOptions = {
     color: 'blue',
     fontFamily: '',
@@ -73,122 +120,178 @@ export class ContenidoComponent {
     fontWeight: 'bold',
     letterSpacing: 'o.5px'
   }
-
   direccion:string;
   nombreCliente:string;
   numeroTelefonoCliente:number;
   montoTotalPagar:number;
   tipoPedido:string;
-  
-  
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
+
+  style:any;
+  direccionBusqueda: direccionBusqueda;
+  map:any;
+
+  infoEmpresa: InfoEmpresa;
 
   constructor(public db:AngularFirestore, public aRouter:ActivatedRoute, 
               public loginSer:LoginVerificacionService, public seguirSer:SeguirService,
               public verificarSer: VerificarService, public buscarSer:BuscarService,
-              public copySer: ClipboardService) {
+              public copySer: ClipboardService, public auth:AuthService, 
+              public cambiarTemaService:CambiarTemaService, public eliminarMarker:EliminarMarkerService,
+              public router: Router, public verDireccion:VerDireccionClienteService) {
 
-    //Traemos los parametros que nos entrega LoginComponent
-/*     this.aRouter.params.subscribe(params=>{
-      this.nombre = params['nombre'];
-      this.clave = params['clave'];
-    }); */
+    this.nombre = localStorage.getItem('nombre');
+    this.clave = localStorage.getItem('clave');
+    this.estado = localStorage.getItem('estado');
 
-      this.nombre = localStorage.getItem('nombre');
-      this.clave = localStorage.getItem('clave');
-
-/*     this.verificarSer.changeEmitted$.subscribe(datos =>{
-      console.log(datos.nombre);
-      this.nombre = datos.nombre;
-      this.clave = datos.clave;
-    }); */
-
+    if(this.estado){
+      if(this.estado == 'dia'){
+        let tema_dia  = require('src/app/jsonfiles/theme_dia.json');
+        console.log('JSON CARGADO TEMA DIA',tema_dia);
+        this.style = tema_dia;
+      }else{
+        let tema_noche = require('src/app/jsonfiles/theme_noche.json');
+        console.log('JSON CARGADO TEMA NOCHE',tema_noche);
+        this.style = tema_noche;
+      }
+    }else{
+      let tema_dia = require('src/app/jsonfiles/theme_dia.json');
+      console.log('NO EXISTE VARIABLE ESTADO EN EL LOCAL STORAGE, PERO SE CARGARA EL TEMA DE DIA', tema_dia)
+      this.style = tema_dia;
+    }
 
     //Iniciamos el servicio de seguir que a su vez trae un evento cambio desde el MainNavComponent
     // al cual nos subscribimos y extraemos la latitud y longitus y se la asignamos a "this.lat" y "this.lng"
     this.seguirSer.changeEmitted$.subscribe(conductor=>{
-     /*   this.lat = conductor.lat;
-        this.lng = conductor.lng; */
+      /* 
         this.origin = null;
-        this.destination = null;
-        console.log(conductor);
+        this.destination = null; */
         this.lat = conductor.lat;
         this.lng = conductor.lng;
+        this.map.setCenter({lat: this.lat, lng:this.lng});
+        this.map.setZoom(17);
         this.nombreConductor = conductor.nombre;
+        this.apellidoConductor = conductor.apellido;
         this.claveConductor = conductor.clave;
-        
-        this.db.collection(`${this.nombre}`).doc('web').collection(`${this.clave}`).doc(`${this.claveConductor}`).valueChanges().subscribe((data:any)=>{
-            this.compartir = data.compartir;
-            this.claveCompartir = data.clave_compartir;
-            console.log(data);
+        this.compartir = conductor.compartir;
+        this.claveCompartir = conductor.clave_compartir;
+        this.online = conductor.online;
+        console.log(conductor);
+    });
+
+    this.cambiarTemaService.changeEmitted$.subscribe((resultado:any) =>{
+      if(resultado.estado == 'noche'){
+        console.log("cambiando style a NightTheme");
+        let tema_noche = require('src/app/jsonfiles/theme_noche.json');
+        this.style = tema_noche;
+        localStorage.setItem('estado', 'noche');
+
+      }else{
+        let tema_dia = require('src/app/jsonfiles/theme_dia.json');
+        console.log("cambiando style a DayTheme");
+        this.style = tema_dia;
+        localStorage.setItem('estado', 'dia');
+      }
+    });
+
+    this.verDireccion.changeEmitted$.subscribe(data=>{
+        console.log(data);
+        this.pedidoLat = data.pedidoLat;
+        this.pedidoLng = data.pedidoLng;
+        this.verDireccionActivado = true
+        console.log(this.verDireccionActivado);
+        this.map.setCenter({lat:this.pedidoLat, lng:this.pedidoLng});
+    });
+
+    this.conductoresSub = this.auth.getConductores(this.nombre).subscribe((conductores:any[])=>{
+      
+      this.conductores = conductores;
+      
+      if(!this.init){
+
+        this.lat = conductores['0']['lat'];
+        this.lng = conductores['0']['lng'];
+        this.init = true;
+        console.log('ver direccion no activado');
+      }
+
+      if(this.claveConductor){
+        conductores.forEach(conductor =>{                
+            if(conductor.clave == this.claveConductor){
+              this.lat = conductor.lat;
+              this.lng = conductor.lng;
+            }
         });
-        console.log(this.lat, this.lng);
-
-        this.db.collection(`${this.nombre}`).doc('movil').collection('usuarios').doc(`${this.claveConductor}`).valueChanges().subscribe((data:any)=>{
-              this.online = data.online;
-        });
+      }
+      
+      this.origin = { lat: this.lat, lng: this.lng };
+      console.log(this.conductores);
     });
 
-    this.conductoresSub = this.db.collection(`${this.nombre}`).doc('movil').collection('usuarios').valueChanges().subscribe((data:any[])=>{
-          this.conductores = data;
-          
-          console.log(this.conductores);
-
-    });
-    
-    
-
-    
-    //Console Log de los datos actuales
-    console.log(this.lat, this.lng);
-
-    //Escuchamos los cambios originados en la base de datos de firebase, indicando la jerarquia de la coleccion
-    //y los documentos
-    db.collection(`${this.nombre}`).doc('web').collection(`${this.clave}`).valueChanges()
-            //Nos subscribimos a la respuesta 
-          .subscribe((data: any[])=>{
-            //asigamos el resultado a nuestra variable "this.deliverys"
-              this.deliverys = data;
-              if(!this.init){
-                this.lat = data['0']['lat'];
-                this.lng = data['0']['lng'];
-                this.init = true;
-              }
-
-              if(this.claveConductor){
-                data.forEach(conductor =>{                
-                    if(conductor.clave == this.claveConductor){
-                      this.lat = conductor.lat;
-                      this.lng = conductor.lng;
-                    }
-                });
-              }
-              console.log(this.deliverys);
-              
-    });
 
     this.buscarSer.changeEmitted$.subscribe(data=>{
       this.latBuscar = data.lat;
       this.lngBuscar = data.lng;
+      this.map.setCenter({lat:this.latBuscar, lng:this.lngBuscar});
+      this.map.setZoom(17);
+      this.buscarDireccion = true;
+      this.isBuscar = true;
+      console.log(this.latBuscar, this.lngBuscar);
+    });
 
-      this.lat = this.latBuscar;
-      this.lng = this.lngBuscar;
+    this.eliminarMarker.changeEmitted$.subscribe(data=>{
+      console.log(data);
+      this.buscarDireccion = false;
+      this.latBuscar = null;
+      this.lngBuscar = null;
+      this.isBuscar = false;
+      this.map.setCenter({lat:this.lat, lng:this.lng});
+      this.map.setZoom(17);
+    });
 
-      this.conductores.push({
-        lat: this.lat,
-        lng: this.lat,
-        nombre: "hola"
-      });
+    this.auth.getPedidos(this.nombre).subscribe((data:any[])=>{
+        if(data){
+          this.pedidos = data;
+          this.pedidosActivos = this.pedidos.filter(pedido => pedido.entregado == false);
+          console.log('si hay datos de pedidos');
+        }else{
+          console.log('no hay datos de pedidos');
+        }
+    });
 
+    this.db.collection('locales').doc(`${this.nombre}`).valueChanges().subscribe((data:InfoEmpresa)=>{
+      if(data){
+        this.infoEmpresa = data;
+        console.log(this.infoEmpresa);
+      }else{
+        console.log('no hay info de local');
+      }
     });
  
-   }
+  }
 
-   //FIN CONSTRUCTOR
+  //FIN CONSTRUCTOR
 
-   //METODOS
-          
-   asignarPedido(){
+  //METODOS
+
+  mapReady(map){
+    this.map = map;
+    console.log(this.map);
+  }
+  
+  //Abrir Menu
+  openMyMenu() {
+    this.matMenuTrigger.openMenu();
+    
+  } 
+
+  //Cerrar Menu
+  closeMyMenu() {
+    this.matMenuTrigger.closeMenu();
+  }
+  
+  //Asignar pedido a un conductor    
+  asignarPedido(){
     Swal.fire({
       title: "Debe Ingresar los siguientes datos",
       text: `Asignara el siguiente pedido a ${this.nombreConductor}`,
@@ -217,70 +320,107 @@ export class ContenidoComponent {
               this.tipoPedido = (<HTMLInputElement>document.getElementById('tipoPedido')).value;
               this.montoTotalPagar = parseInt(((<HTMLInputElement>document.getElementById('montoTotal')).value));
               console.log(this.direccion, this.nombreCliente, this.numeroTelefonoCliente, this.tipoPedido, this.montoTotalPagar);
-              this.db.collection(`${this.nombre}`).doc(`movil`).collection(`usuarios`).doc(`${this.claveConductor}`).collection('pedidos').add({
+              this.db.collection(`locales`).doc(`${this.nombre}`).collection(`movil`).doc(`${this.claveConductor}`).collection('pedidos').add({
                   direccion: this.direccion,
                   nombre: this.nombreCliente,
                   entregado: false,
                   numeroTelefono: this.numeroTelefonoCliente,
                   repartidor: this.nombreConductor,
                   tipoPedido: this.tipoPedido,
-                  montoTotal: this.montoTotalPagar
+                  montoTotal: this.montoTotalPagar,
+                  clave_reparto: this.claveConductor
               });
           }
           if(result.dismiss){
               console.log("Cancelar Clickeado");
           }
     });
-   }
-  
-    
-   getDirection() {
-    
-    this.isDirection = true;
-    console.log(this.lat,this.lng);
-    this.directionSub = this.db.collection(`${this.nombre}`).doc('movil').collection('usuarios').doc(`${this.claveConductor}`).valueChanges().subscribe((data:any)=>{
-         console.log(data)
-         this.lat = data.lat;
-         this.lng = data.lng;
-    })
-    
-    this.origin = { lat: this.lat, lng: this.lng };
-    this.destination = { lat: this.latBuscar, lng: this.lngBuscar };
-   }
-
-   exitDirection(){
-     this.origin = null;
-     this.destination = null;
-     this.isDirection = false;
-     this.directionSub.unsubscribe();
-   }
-
-   copy(){
-      this.copySer.copyFromContent(this.claveCompartir);
-
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000
-      });
-      
-      Toast.fire({
-        type: 'success',
-        title: 'Copiado al Portapapeles!'
-      })
-      
-   }
-
-  openMyMenu() {
-    this.matMenuTrigger.openMenu();
-
-  } 
-  closeMyMenu() {
-    this.matMenuTrigger.closeMenu();
   }
   
-   dejarDeSeguir(){
+  //Crear Ruta Optima segun los pedidos asignados al repartidor
+  getDirection() {
+    const Toast = Swal.mixin({
+      toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000
+      });
+
+    Toast.fire({
+      type: 'success',
+      title: `Ruta optimizada asignada a ${this.nombreConductor} ${this.apellidoConductor}`
+    });
+    console.log(this.infoEmpresa);
+    this.isDirection = true;
+    this.origin = { lat: this.lat, lng: this.lng };
+    for(var pedido of this.pedidosActivos){
+      this.waypoints.push({
+        location: {lat: pedido.pedidoLat, lng: pedido.pedidoLng},
+        stopover: false
+      })
+    }
+    this.destination = { lat: this.infoEmpresa.lat, lng: this.infoEmpresa.lng };
+    
+  }
+//Crear ruta optima segun la direccion buscada
+  getDirectionSearchPoint(){
+    const Toast = Swal.mixin({
+      toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000
+      });
+
+    Toast.fire({
+      type: 'success',
+      title: `Trazado de ruta solicitada`
+    });
+    this.isDirection = true;
+    this.waypoints = [];
+    this.origin ={lat: this.lat, lng:this.lng};
+    this.destination = {lat:this.latBuscar, lng: this.lngBuscar};
+  }
+  
+  //Salir de modo ruta
+  exitDirection(){
+    const Toast = Swal.mixin({
+      toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000
+      });
+
+    Toast.fire({
+      type: 'warning',
+      title: `Saliendo de la ruta optimizada`
+    });
+    this.origin = null;
+    this.destination = null;
+    this.isDirection = false;
+    this.map.setCenter({lat:this.lat, lng:this.lng});
+    this.map.setZoom(16);
+  }
+  
+  //Copiar al portapapeles
+  copy(){
+    this.copySer.copyFromContent(this.claveCompartir);
+
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2000
+    });
+    
+    Toast.fire({
+      type: 'success',
+      title: 'Copiado al Portapapeles!'
+    })
+    
+  }
+
+  //Dejar de seguir
+  dejarDeSeguir(){
 
     const Toast = Swal.mixin({
       toast: true,
@@ -288,89 +428,73 @@ export class ContenidoComponent {
       showConfirmButton: false,
       timer: 3000
     });
-    
+  
     Toast.fire({
       type: 'warning',
-      title: `dejando de seguir a ${this.nombreConductor}`
+      title: `dejando de seguir a ${this.nombreConductor} ${this.apellidoConductor}`
     });
-        this.nombreConductor = null;
-        this.claveConductor = null;
-        this.claveCompartir = null;
 
-   }
+    this.nombreConductor = null;
+    this.claveConductor = null;
+    this.claveCompartir = null;
 
+  }
+  //Compartir la ruta del conductor
    compartirRuta(){
 
-      let data = {
+      let ruta = {
         nombre: this.nombreConductor,
+        apellido: this.apellidoConductor,
         lat: this.lat,
         lng: this.lng,
-        imagen: "asdasd",
         clave: this.claveConductor,
         empresa: this.nombre,
         compartir: true
       }
+      console.log(this.nombre);
+      console.log(ruta);
+      console.log(this.claveConductor);
+      this.db.collection('locales').doc(`${this.nombre}`).collection('rooms').add(ruta).then( (docRef)=>{
+            if(docRef.id){
+              Swal.fire({
+                title: "Compartir este codigo con sus clientes",
+                text: `${docRef.id}`,
+                type: "success",
+                position: "top",
+                allowOutsideClick: false
+                
+              }).then(()=>{
 
-      this.db.collection(`${this.nombre}`).doc('cliente').collection('rooms').add(data).then( (docRef) =>{
-        
-        /*  this.documentId = this.db.collection(`${this.nombre}`).doc('cliente').collection('rooms');
-        this.documentId.get().subscribe(data=>{
-          this.claveCompartir = data['docs']['0']['id'];
-          console.log(this.claveCompartir);
-          console.log("agregado con exito");
-          Swal.fire("Comparte este codigo con tus clientes", `${this.claveCompartir}`, "success");
-          console.log(data);
-        }); */
-        console.log(docRef.id);
+                this.db.collection('locales').doc(`${this.nombre}`).collection('movil').doc(`${this.claveConductor}`).update({
+                  compartir: true,
+                  clave_compartir: docRef.id
+                });
 
-        Swal.fire({
-          title: "Compartir este codigo con sus clientes",
-          text: `${docRef.id}`,
-          type: "success",
-          position: "top",
-          allowOutsideClick: false
-          
-        }).then(()=>{
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 3000
+                });
+                
+                Toast.fire({
+                  type: 'success',
+                  title: `se está compartiendo la ruta de ${this.nombreConductor} ${this.apellidoConductor}`
+                });
 
-            this.db.collection(`${this.nombre}`).doc('web').collection(`${this.clave}`).doc(`${this.claveConductor}`).update({
-                compartir: true
-            });
-            this.db.collection(`${this.nombre}`).doc('movil').collection(`usuarios`).doc(`${this.claveConductor}`).update({
-              compartir: true
-            });
-            
-            this.db.collection(`${this.nombre}`).doc('web').collection(`${this.clave}`).doc(`${this.claveConductor}`).update({
-              clave_compartir: this.claveCompartir
-            });
-            this.db.collection(`${this.nombre}`).doc('movil').collection(`usuarios`).doc(`${this.claveConductor}`).update({
-              clave_compartir: this.claveCompartir
-            });
-
-            const Toast = Swal.mixin({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000
-            });
-            
-            Toast.fire({
-              type: 'success',
-              title: `se está compartiendo la ruta de ${this.nombreConductor}`
-            });
-
-            
-
-          });
-
-          this.claveCompartir = docRef.id;
-          
-      });
+                this.compartir = true;
+                this.claveCompartir = docRef.id;
+              });
+            }else{
+              console.log("no se agrego correctamente");
+            }
+      } );
    }
 
    dejarDeCompartir(){
      Swal.fire({
        title: "¿Está seguro?",
-       text: `esto eliminará la actual ruta de ${this.nombreConductor}`,
+       text: `esto eliminará la actual ruta de ${this.nombreConductor} ${this.apellidoConductor}`,
        type: "warning",
        position: "top",
        showCancelButton: true,
@@ -380,17 +504,14 @@ export class ContenidoComponent {
 
       if(result.value){
 
-        this.db.collection(`${this.nombre}`).doc('cliente').collection('rooms').doc(`${this.claveCompartir}`).delete().then(()=>{
+        this.db.collection('locales').doc(`${this.nombre}`).collection('rooms').doc(`${this.claveCompartir}`).delete().then(()=>{
           this.compartir = false;
           
-          this.db.collection(`${this.nombre}`).doc('web').collection(`${this.clave}`).doc(`${this.claveConductor}`).update({
+          this.db.collection('locales').doc(`${this.nombre}`).collection('movil').doc(`${this.claveConductor}`).update({
               compartir: false,
               clave_compartir: ""
           });
-          this.db.collection(`${this.nombre}`).doc('movil').collection(`usuarios`).doc(`${this.claveConductor}`).update({
-            compartir: false,
-            clave_compartir: ""
-          });
+
         }).catch(error=>{
           console.log(error);
         });
@@ -422,9 +543,18 @@ export class ContenidoComponent {
       
    }
 
-   abrirMarcador(){
+   abrirMarcador(marcador:any){
      console.log("marcadorClickeado");
+     console.log(marcador);
    }
 
+   public change(event: any) {
+    this.waypoints = event.request.waypoints;
+  }
 
+}
+
+interface direccionBusqueda {
+  lat: number;
+  lng: number;
 }

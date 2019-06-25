@@ -11,8 +11,6 @@ import { faEye ,faEyeSlash, faUser,faKey, faTimesCircle } from '@fortawesome/fre
 
 
 
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

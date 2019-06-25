@@ -1,40 +1,42 @@
-<div class="container text-center" style="margin-top:15px">
-    <h1>Usuarios</h1>
-</div>
-<!-- <div class="form">
-    <div class="group">
-        <fa-icon [icon]="faUser"></fa-icon>
-        <input placeholder="Usuario" type="text" [(ngModel)]="nombre" required><span class="highlight"></span><span class="bar"></span>
+<div class=" pad">
+    <div class="container text-center" style="margin-top:15px">
+        <h1>Usuarios</h1>
     </div>
+    <!-- <div class="form">
+        <div class="group">
+            <fa-icon [icon]="faUser"></fa-icon>
+            <input placeholder="Usuario" type="text" [(ngModel)]="nombre" required><span class="highlight"></span><span class="bar"></span>
+        </div>
+    
+        <div class="group">
+            <fa-icon [icon]="faKey"></fa-icon>
+            <input placeholder="Contraseña" type="password" [(ngModel)]="clave" required><span class="highlight"></span><span class="bar"></span>
+        </div>
+    
+        <button type="button" class="button buttonBlue" (click)="ingresar(nombre, clave)">Ingresar
+        <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+      </button>
+    </div> -->
 
-    <div class="group">
-        <fa-icon [icon]="faKey"></fa-icon>
-        <input placeholder="Contraseña" type="password" [(ngModel)]="clave" required><span class="highlight"></span><span class="bar"></span>
+    <div class="form example-container">
+        <mat-form-field class="group">
+            <input matInput placeholder="Usuario" type="text" [(ngModel)]="nombre" required>
+            <button mat-button *ngIf="nombre" matSuffix mat-icon-button aria-label="Clear" (click)="borrar()">
+                    <fa-icon aria-hidden="false" [icon]="faTimesCircle"></fa-icon>
+            </button>
+        </mat-form-field>
+
+        <mat-form-field class="group">
+            <input id="inputClave" matInput placeholder="Contraseña" type="password" [(ngModel)]="clave" required>
+            <button mat-button *ngIf="clave" matSuffix mat-icon-button aria-label="Clear" (click)="mostrar()">
+                    <fa-icon *ngIf="!isMostrar" aria-hidden="false" [icon]="faEyeSlash"></fa-icon>
+                    <fa-icon *ngIf="isMostrar" aria-hidden="false" [icon]="faEye"></fa-icon>
+            </button>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="button" class="button" (keyup.enter)="ingresar(nombre, clave)" (click)="ingresar(nombre, clave)">Ingresar
+                <!-- <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div> -->
+        </button>
     </div>
-
-    <button type="button" class="button buttonBlue" (click)="ingresar(nombre, clave)">Ingresar
-    <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
-  </button>
-</div> -->
-
-<div class="form example-container">
-    <mat-form-field class="group">
-        <input matInput placeholder="Usuario" type="text" [(ngModel)]="nombre" required>
-        <button mat-button *ngIf="nombre" matSuffix mat-icon-button aria-label="Clear" (click)="borrar()">
-                <fa-icon aria-hidden="false" [icon]="faTimesCircle"></fa-icon>
-        </button>
-    </mat-form-field>
-
-    <mat-form-field class="group">
-        <input id="inputClave" matInput placeholder="Contraseña" type="password" [(ngModel)]="clave" required>
-        <button mat-button *ngIf="clave" matSuffix mat-icon-button aria-label="Clear" (click)="mostrar()">
-                <fa-icon *ngIf="!isMostrar" aria-hidden="false" [icon]="faEyeSlash"></fa-icon>
-                <fa-icon *ngIf="isMostrar" aria-hidden="false" [icon]="faEye"></fa-icon>
-        </button>
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" type="button" class="button" (click)="ingresar(nombre, clave)">Ingresar
-            <!-- <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div> -->
-    </button>
 
 </div>

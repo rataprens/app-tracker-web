@@ -1,0 +1,30 @@
+<mat-list>
+    <div class="container">
+        <mat-list-item>
+            <fa-icon [icon]="faUser"></fa-icon>
+            &nbsp; <b>Nombre Cliente:</b> {{pedido.data_pedido.nombre}}
+        </mat-list-item>
+        <mat-list-item>
+            <fa-icon [icon]="faPhone"></fa-icon>
+            &nbsp; <b> Numero de Telefono: </b> +569{{pedido.data_pedido.numeroTelefono}}
+        </mat-list-item>
+        <mat-list-item>
+            <fa-icon [icon]="faMapMarker"></fa-icon>
+            &nbsp; <b>Dirección: </b> {{pedido.data_pedido.direccion}} &nbsp;
+            <button mat-mini-fab color="primary" (click)="abrirMapa()"><fa-icon [icon]="faBinoculars"></fa-icon></button>
+        </mat-list-item>
+        <mat-list-item>
+            <fa-icon [icon]="faStickyNote"></fa-icon>
+            &nbsp; <b>Tipo de Pedido: </b> {{pedido.data_pedido.tipoPedido}}
+        </mat-list-item>
+        <mat-list-item>
+            <fa-icon [icon]="faCar"></fa-icon>
+            &nbsp; <b>Repartidor: </b> {{pedido.data_pedido.repartidor}}
+        </mat-list-item>
+        <mat-list-item>
+            <fa-icon [icon]="faDollarSign"></fa-icon>
+            &nbsp; <b> Monto total: </b>
+            <span>&#36;</span> {{pedido.data_pedido.montoTotal}}
+        </mat-list-item>
+    </div>
+</mat-list>

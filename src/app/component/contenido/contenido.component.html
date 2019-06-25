@@ -1,42 +1,40 @@
 <!-- MENU FLOTANTE -->
-<div class="floating-panel " *ngIf="nombreConductor">
-    <div class="container">
-        <h3>
+<div class="floating-panel animated fadeIn " *ngIf="nombreConductor">
 
-            <small *ngIf="nombreConductor" class="animated fadeIn">siguiendo a </small>
-            <br>
-            <!-- <mat-chip *ngIf="nombreConductor" class="animated fadeIn">{{nombreConductor}}</mat-chip> -->
-            <span *ngIf="nombreConductor" class="badge badge-pill badge-primary animated fadeIn">{{nombreConductor}}</span>
+    <h3>
 
-        </h3>
-    </div>
+        <small *ngIf="nombreConductor" class="animated fadeIn">Siguiendo a </small>
+        <br>
+        <!-- <mat-chip *ngIf="nombreConductor" class="animated fadeIn">{{nombreConductor}}</mat-chip> -->
+        <span *ngIf="nombreConductor" class="badge badge-pill badge-primary animated fadeIn">{{nombreConductor}} {{apellidoConductor}}</span>
+
+    </h3>
+
     <!-- SECCION DE BOTONES -->
-    <mat-nav-list dense>
+    <mat-nav-list dense *ngIf="nombreConductor">
         <mat-list-item role="listitem">
-            <button mat-flat-button color="warn" (click)="dejarDeSeguir()" *ngIf="nombreConductor" class="animated fadeIn faster centrarBoton">
+            <button mat-flat-button color="warn" (click)="dejarDeSeguir()" class="animated fadeIn faster centrarBoton">
                     Dejar de seguir 
                     <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
             </button>
         </mat-list-item>
-        <mat-list-item role="listitem">
-            <button mat-flat-button color="primary" (click)="compartirRuta()" *ngIf="nombreConductor && !compartir && online" class=" animated fadeIn faster centrarBoton">
+        <mat-list-item role="listitem" *ngIf="nombreConductor && !compartir && online">
+            <button mat-flat-button color="primary" (click)="compartirRuta()" class=" animated fadeIn faster centrarBoton">
                     Compartir Ruta 
                     <fa-icon style="padding-left:5px" [icon]="faShareSquare"></fa-icon>
             </button>
         </mat-list-item>
-        <mat-list-item role="listitem">
-            <button mat-flat-button color="warn" *ngIf="compartir && nombreConductor && online" (click)="dejarDeCompartir()" class=" animated fadeIn faster centrarBoton">
+        <mat-list-item role="listitem" *ngIf="compartir && nombreConductor && online">
+            <button mat-flat-button color="warn" (click)="dejarDeCompartir()" class=" animated fadeIn faster centrarBoton">
                     Dejar de compartir ruta
                     <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
             </button>
         </mat-list-item>
-        <mat-list-item role="listitem">
-            <button mat-flat-button color="primary" *ngIf="claveCompartir && compartir && online" mat-button class="centrarBoton" [matMenuTriggerFor]="menu1" (click)="openMyMenu()">
+        <mat-list-item role="listitem" *ngIf="compartir && online">
+            <button mat-flat-button color="primary" mat-button class="centrarBoton" [matMenuTriggerFor]="menu1" (click)="openMyMenu()">
                     Ver Codigo de Ruta
                     <fa-icon style="padding-left:5px" [icon]="faBinoculars"></fa-icon>
             </button>
-        </mat-list-item>
-        <mat-list-item role="listitem">
             <mat-menu #menu1="matMenu">
                 <button mat-menu-item ngxClipboard [cbContent]="claveCompartir" (cbOnSuccess)="isCopiado = true" (click)="copy() " class="animated fadeIn faster centrarBoton">
                     <fa-icon *ngIf="claveCompartir" [icon]="faKey"></fa-icon>
@@ -45,27 +43,33 @@
             </mat-menu>
         </mat-list-item>
         <mat-list-item role="listitem">
-            <button matBadge="22" matBadgePosition="above after" matBadgeColor="warn" mat-flat-button color="primary" (click)="abrirChat()" *ngIf="nombreConductor" class="animated fadeIn faster centrarBoton">
+            <button matBadge="22" matBadgePosition="above after" matBadgeColor="warn" mat-flat-button color="primary" [routerLink]="['/chat']" *ngIf="nombreConductor" class="animated fadeIn faster centrarBoton">
                     Chat 
                     <fa-icon style="padding-left:5px" [icon]="faComments"></fa-icon>
             </button>
         </mat-list-item>
-        <mat-list-item role="listitem">
-            <button *ngIf="nombreConductor && !isDirection" mat-flat-button color="warn" (click)="getDirection()" class="animated fadeIn faster centrarBoton">
-                        Calcular Ruta 
+        <mat-list-item role="listitem" *ngIf="nombreConductor && !isDirection && !isBuscar">
+            <button mat-flat-button color="warn" (click)="getDirection()" class="animated fadeIn faster centrarBoton">
+                        Calcular Ruta Optima
+                    <fa-icon style="padding-left:5px" [icon]="faMapMarkedAlt"></fa-icon>
+            </button>
+        </mat-list-item>
+        <mat-list-item role="listitem" *ngIf="nombreConductor && isDirection && !isBuscar">
+            <button mat-flat-button color="warn" (click)="exitDirection()" class="animated fadeIn faster centrarBoton">
+                        Dejar de Calcular Ruta Optima
                         <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
             </button>
         </mat-list-item>
-        <mat-list-item role="listitem">
-            <button *ngIf="nombreConductor && isDirection" mat-flat-button color="warn" (click)="exitDirection()" class="animated fadeIn faster centrarBoton">
-                        Dejar de Calcular Ruta 
-                        <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
-            </button>
+        <mat-list-item role="listitem" *ngIf="nombreConductor && !isDirection && isBuscar">
+            <button mat-flat-button color="warn" (click)="getDirectionSearchPoint()" class="animated fadeIn faster centrarBoton">
+                        Calcular hasta el Punto de Busqueda         
+                    <fa-icon style="padding-left:5px" [icon]="faSearch"></fa-icon>
+                </button>
         </mat-list-item>
-        <mat-list-item role="listitem">
-            <button *ngIf="nombreConductor" mat-flat-button color="warn" (click)="asignarPedido()" class="animated fadeIn faster centrarBoton">
-                    Asignar Pedido  
-                    <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
+        <mat-list-item role="listitem" *ngIf="nombreConductor && isDirection && isBuscar">
+            <button mat-flat-button color="warn" (click)="exitDirection()" class="animated fadeIn faster centrarBoton">
+                        Dejar de Calcular Ruta
+                        <fa-icon style="padding-left:5px" [icon]="faTimesCircle"></fa-icon>
             </button>
         </mat-list-item>
     </mat-nav-list>
@@ -74,15 +78,29 @@
 <!-- MENU FLOTANTE -->
 
 <!-- SECCION DEL MAPA -->
-<agm-map [latitude]="lat" [longitude]="lng" [zoom]="17">
-    <agm-direction *ngIf="isDirection" [origin]="origin" [destination]="destination">
+
+<agm-map (mapReady)="mapReady($event)" [latitude]="lat" [longitude]="lng" [zoom]="16" [streetViewControl]="false" [styles]="style">
+    <agm-direction (onchange)="change($event)" *ngIf="isDirection" [waypoints]="waypoints" [origin]="origin" [destination]="destination" [renderOptions]="renderOptions" [markerOptions]="markerOptions">
+
     </agm-direction>
-    <span *ngIf="!isDirection">
-            <agm-marker (markerClick)="abrirMarcador()" *ngFor="let conductor of conductores" [label]="labelOptions" [iconUrl]="icon" [latitude]="conductor.lat" [longitude]="conductor.lng">
-                <agm-info-window>
-                    {{conductor.nombre}}
-                </agm-info-window>
-            </agm-marker>
-    </span>
+    <agm-marker (markerClick)="abrirMarcador($event)" *ngFor="let conductor of conductores" [label]="labelOptions" [iconUrl]="icon" [latitude]="conductor.lat" [longitude]="conductor.lng">
+        <agm-info-window>
+            {{conductor.nombre}} {{conductor.apellido}}
+        </agm-info-window>
+    </agm-marker>
+    <agm-marker *ngIf="buscarDireccion && !isDirection" [latitude]="latBuscar" [longitude]="lngBuscar">
+
+    </agm-marker>
+    <agm-marker *ngIf="verDireccionActivado" [latitude]="pedidoLat" [longitude]="pedidoLng">
+        <agm-info-window [disableAutoPan]="true">
+            <mat-nav-list dense>
+                <mat-list-item role="listitem">
+                    <button mat-mini-fab color="warn" class="animated fadeIn faster centrarBoton">
+                            Llegar
+                    </button>
+                </mat-list-item>
+            </mat-nav-list>
+        </agm-info-window>
+    </agm-marker>
 </agm-map>
 <!-- FIN SECCION DEL MAPA -->

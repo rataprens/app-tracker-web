@@ -3,7 +3,7 @@
 }
 
 agm-map {
-    height: 89vh;
+    height: 89.8vh;
     /* height: 100%; */
     /* height: 100%;
     width: 100%; */
@@ -11,15 +11,19 @@ agm-map {
 
 .floating-panel {
     position: absolute;
-    top: 10px;
+    top: 70px;
     right: 0%;
     z-index: 5;
-    background-color: #fff;
+    background-color: transparent;
     padding: 20px;
     border: 1px solid #999;
     text-align: center;
     font-family: 'Roboto', 'sans-serif';
     line-height: 30px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .container-class {
@@ -28,4 +32,8 @@ agm-map {
 
 .centrarBoton {
     margin-right: 0%;
+}
+
+button {
+    width: 100%;
 }

@@ -2,12 +2,6 @@
     box-sizing: border-box;
 }
 
-body {
-    /* font-family: Helvetica; */
-    background: #888;
-    -webkit-font-smoothing: antialiased;
-}
-
 hgroup {
     text-align: center;
     margin-top: 4em;
@@ -311,4 +305,12 @@ footer a:focus {
 
 .example-container>* {
     width: 100%;
+}
+
+.imagen {
+    background-image: url('../../../assets/images/bg.jpg');
+}
+
+.pad {
+    margin-top: 1px;
 }

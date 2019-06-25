@@ -1,0 +1,77 @@
+<mat-grid-list cols="2" rowHeight="500px">
+    <mat-grid-tile>
+        <!-- Lista de los pedidos -->
+        <div class="example-container">
+            <!-- Pedidos Activos -->
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header [collapsedHeight]="'80px'">
+                    <mat-panel-title>
+                        Pedidos Activos
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <span [matBadge]="pedidosActivosTotal" matBadgePosition="after above" matBadgeOverlap="false" matBadgeColor="warn"> Presiona para mas detalles</span>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <mat-list-item *ngFor="let pedido of pedidosActivos" role="listitem">
+                    <button mat-raised-button (click)="openBottomSheet(pedido)" color="primary">
+                        {{pedido.tipoPedido}} - {{pedido.nombre}}
+                    </button>
+                </mat-list-item>
+            </mat-expansion-panel>
+            <!-- Pedidos Realizados -->
+            <mat-expansion-panel>
+                <mat-expansion-panel-header [collapsedHeight]="'80px'">
+                    <mat-panel-title>
+                        Pedidos Realizados
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <span [matBadge]="pedidosEntregadosTotal" matBadgePosition="after above" matBadgeOverlap="false" matBadgeColor="warn">Presiona para mas detalles</span>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <mat-list-item *ngFor="let pedido of pedidosEntregados" role="listitem">
+                    <button mat-raised-button (click)="openBottomSheet(pedido)" color="primary">
+                            {{pedido.tipoPedido}} - {{pedido.nombre}}
+                        </button>
+                </mat-list-item>
+            </mat-expansion-panel>
+
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <!-- Crear nuevo pedido -->
+        <form class="example-container" novalidate [formGroup]="pedidoFormulario">
+            <h4>Crear Pedido</h4>
+            <mat-form-field>
+                <input matInput [options]="options" formControlName="direccionCliente" required ngx-google-places-autocomplete #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" placeholder="Dirección">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput formControlName="nombreCliente" required placeholder="Nombre Cliente">
+
+            </mat-form-field>
+            <mat-form-field>
+                <span matPrefix>+569 &nbsp;</span>
+                <input matInput formControlName="numeroTelefono" required type="number" placeholder="Numero de Telefono">
+
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput formControlName="tipoPedido" required placeholder="Tipo Pedido">
+
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select formControlName="clave_conductor" placeholder="Conductor">
+                    <mat-option *ngFor="let conductor of conductores" [value]="conductor.clave">{{conductor.nombre}} {{conductor.apellido}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <span matPrefix>&#36; &nbsp;</span>
+                <input matInput formControlName="totalPagar" required type="number" placeholder="Total a Pagar">
+
+            </mat-form-field>
+            <button type="submit" [disabled]="pedidoFormulario.invalid" mat-raised-button color="primary" (click)="crearPedido(pedidoFormulario.value)" mat-button>Crear Pedido y Asignar</button>
+        </form>
+
+
+    </mat-grid-tile>
+</mat-grid-list>

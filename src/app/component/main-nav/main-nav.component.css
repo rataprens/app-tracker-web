@@ -46,3 +46,7 @@ h1.example-app-name {
     width: 300px;
     height: 60px;
 }
+
+.color1 {
+    background-color: rgb(228, 72, 23);
+}

@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { ContenidoComponent } from './component/contenido/contenido.component';
-import { MapaComponent } from './component/mapa/mapa.component';
 
 import { AgmCoreModule } from '@agm/core';
 
@@ -19,7 +18,10 @@ import { APPROUTING } from './app.route';
 import { AuthService } from './services/auth.service';
 
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { MatBadgeModule, MatFormFieldModule, MatChipsModule ,MatInputModule,MatButtonModule, MatCheckboxModule, MatToolbarModule, MatSidenavModule, MatIconModule, MatListModule, MatIconRegistry, MatMenuModule} from '@angular/material';
+import { MatBadgeModule, MatFormFieldModule, MatChipsModule ,MatInputModule,MatButtonModule, MatCheckboxModule, MatToolbarModule,
+         MatSidenavModule, MatIconModule, MatListModule, MatIconRegistry, 
+         MatMenuModule, MatExpansionModule, MatGridListModule, MatCardModule,
+        MatOptionModule, MatSelectModule, MatBottomSheetModule} from '@angular/material';
 import { MainNavComponent } from './component/main-nav/main-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -30,7 +32,14 @@ import { BuscarService } from './services/buscar.service';
 
 import { ClipboardModule } from 'ngx-clipboard';
 import { AgmDirectionModule } from 'agm-direction';
+import { CambiarTemaService } from './services/cambiar-tema.service';
+import { ChatComponent } from './component/chat/chat.component';
+import { CrearRutaComponent } from './component/crear-ruta/crear-ruta.component';
+import { PedidosComponent, BottomSheetOverviewExampleSheet } from './component/pedidos/pedidos.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
+import { VerDireccionClienteService } from './services/ver-direccion-cliente.service';
+import { HttpClientModule } from "@angular/common/http";
 
 
 @NgModule({
@@ -38,9 +47,12 @@ import { AgmDirectionModule } from 'agm-direction';
     AppComponent,
     HeaderComponent,
     ContenidoComponent,
-    MapaComponent,
     LoginComponent,
-    MainNavComponent
+    MainNavComponent,
+    ChatComponent,
+    CrearRutaComponent,
+    PedidosComponent,
+    BottomSheetOverviewExampleSheet
   ],
   imports: [
     BrowserModule,
@@ -48,7 +60,9 @@ import { AgmDirectionModule } from 'agm-direction';
       apiKey: 'AIzaSyCNrSxTaaXtAZy3Wtucs6voOjCxJGpuujM',
       libraries: ['places']
     }),
+    HttpClientModule,
     AgmDirectionModule,
+    ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     FormsModule,
@@ -68,13 +82,23 @@ import { AgmDirectionModule } from 'agm-direction';
     ClipboardModule,
     MatChipsModule,
     MatFormFieldModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatCardModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatBottomSheetModule
   ],
+  entryComponents: [BottomSheetOverviewExampleSheet, PedidosComponent],
   providers: [
     AuthService,
     LoginVerificacionService,
     SeguirService,
-    BuscarService
+    BuscarService,
+    CambiarTemaService,
+    BottomSheetOverviewExampleSheet,
+    VerDireccionClienteService
   ],
   bootstrap: [AppComponent]
 })
