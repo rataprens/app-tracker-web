@@ -19,9 +19,9 @@ import { AuthService } from './services/auth.service';
 
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MatBadgeModule, MatFormFieldModule, MatChipsModule ,MatInputModule,MatButtonModule, MatCheckboxModule, MatToolbarModule,
-         MatSidenavModule, MatIconModule, MatListModule, MatIconRegistry, 
+         MatSidenavModule, MatIconModule, MatListModule, MatIconRegistry,MatDialogModule, 
          MatMenuModule, MatExpansionModule, MatGridListModule, MatCardModule,
-        MatOptionModule, MatSelectModule, MatBottomSheetModule} from '@angular/material';
+        MatOptionModule, MatSelectModule, MatBottomSheetModule, MatTabsModule, MatPaginatorModule, MatTableModule} from '@angular/material';
 import { MainNavComponent } from './component/main-nav/main-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -40,6 +40,8 @@ import { PedidosComponent, BottomSheetOverviewExampleSheet } from './component/p
 import { ReactiveFormsModule } from '@angular/forms';
 import { VerDireccionClienteService } from './services/ver-direccion-cliente.service';
 import { HttpClientModule } from "@angular/common/http";
+import { CentroControlComponent, DialogOverviewExampleDialog } from './component/centro-control/centro-control.component';
+import { SimplebarAngularModule } from 'simplebar-angular';
 
 
 @NgModule({
@@ -52,7 +54,9 @@ import { HttpClientModule } from "@angular/common/http";
     ChatComponent,
     CrearRutaComponent,
     PedidosComponent,
-    BottomSheetOverviewExampleSheet
+    BottomSheetOverviewExampleSheet,
+    CentroControlComponent,
+    DialogOverviewExampleDialog
   ],
   imports: [
     BrowserModule,
@@ -88,9 +92,14 @@ import { HttpClientModule } from "@angular/common/http";
     MatCardModule,
     MatOptionModule,
     MatSelectModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatTabsModule,
+    MatPaginatorModule,
+    MatTableModule,
+    SimplebarAngularModule,
+    MatDialogModule
   ],
-  entryComponents: [BottomSheetOverviewExampleSheet, PedidosComponent],
+  entryComponents: [BottomSheetOverviewExampleSheet, PedidosComponent, DialogOverviewExampleDialog],
   providers: [
     AuthService,
     LoginVerificacionService,

@@ -53,8 +53,19 @@ export class LoginComponent implements OnInit {
         if(existe){
           console.log("existe usuario");
           //METODO
-          Swal.fire(`Bienvenido ${nombre}`, "¿Deseas Seguir?", "success").then(resultado=>{
-            if(resultado){
+          Swal.fire({
+            title: `Bienvenido ${nombre}`,
+            text: "¿Deseas Seguir?",
+            type: 'success',
+            allowOutsideClick: false,
+            showCancelButton: true,
+            cancelButtonColor: 'red',
+            allowEnterKey: true,
+            confirmButtonText: 'Vamos!',
+            cancelButtonText: 'No!'
+          }).then(resultado=>{
+            console.log(resultado)
+            if(resultado.value){
   
               localStorage.setItem('nombre', this.nombre);
               localStorage.setItem('clave', this.clave);
@@ -70,7 +81,7 @@ export class LoginComponent implements OnInit {
               /* sessionStorage.setItem('login', "true"); */
               
               this.router.navigate(['/contenido']);
-            }else{
+            }else if(resultado.dismiss){
               return false;
             }
           })

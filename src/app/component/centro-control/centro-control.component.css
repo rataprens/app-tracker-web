@@ -1,0 +1,13 @@
+.aref{
+  /* font-family: 'Aref Ruqaa', serif; */
+  font-family: 'Carrois Gothic SC', sans-serif;
+}
+
+::ng-deep .mat-tab-list:first-child {
+  padding-left: calc(25%) !important; 
+}
+
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  color:black;
+  background-color: lightblue;
+  }

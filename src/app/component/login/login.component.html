@@ -1,4 +1,4 @@
-<div class=" pad">
+<div class="pad">
     <div class="container text-center" style="margin-top:15px">
         <h1>Usuarios</h1>
     </div>
@@ -18,7 +18,8 @@
       </button>
     </div> -->
 
-    <div class="form example-container">
+    <div class="form example-container" style="border-radius:10px"> 
+        
         <mat-form-field class="group">
             <input matInput placeholder="Usuario" type="text" [(ngModel)]="nombre" required>
             <button mat-button *ngIf="nombre" matSuffix mat-icon-button aria-label="Clear" (click)="borrar()">

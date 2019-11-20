@@ -84,8 +84,25 @@
 
     </agm-direction>
     <agm-marker (markerClick)="abrirMarcador($event)" *ngFor="let conductor of conductores" [label]="labelOptions" [iconUrl]="icon" [latitude]="conductor.lat" [longitude]="conductor.lng">
-        <agm-info-window>
-            {{conductor.nombre}} {{conductor.apellido}}
+        <agm-info-window style="width:20vw; height:20vh">
+            <!-- {{conductor.nombre}} {{conductor.apellido}} -->
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="example-header-image"></div>
+                    <mat-card-title>{{conductor.nombre}}</mat-card-title>
+                    <mat-card-subtitle>{{conductor.apellido}}</mat-card-subtitle>
+                </mat-card-header>
+                <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+                <mat-card-content style="width:100px">
+                    <p>
+
+                    </p>
+                </mat-card-content>
+<!--                 <mat-card-actions>
+                    <button mat-button style="width:60px">Menu</button>
+                    <button mat-button style="width:60px">Cerrar</button>
+                </mat-card-actions> -->
+            </mat-card>
         </agm-info-window>
     </agm-marker>
     <agm-marker *ngIf="buscarDireccion && !isDirection" [latitude]="latBuscar" [longitude]="lngBuscar">

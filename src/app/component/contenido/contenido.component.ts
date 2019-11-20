@@ -27,7 +27,8 @@ interface InfoEmpresa {
   numeroTelefono: number,
   password: string,
   tipo: string,
-  tipoPlan: string
+  tipoPlan: string,
+  tipo_local:string
 }
 
 @Component({
@@ -73,6 +74,7 @@ export class ContenidoComponent {
   isDirection:boolean = false;
   latBuscar:number;
   lngBuscar:number;
+  tipo_local:any;
   formatAddress = "";
   options= {
     componentRestrictions: { country: 'CL' }
@@ -141,8 +143,99 @@ export class ContenidoComponent {
               public router: Router, public verDireccion:VerDireccionClienteService) {
 
     this.nombre = localStorage.getItem('nombre');
+    console.log(this.nombre)
     this.clave = localStorage.getItem('clave');
     this.estado = localStorage.getItem('estado');
+      this.db.collection('locales').doc(`${this.nombre}`).valueChanges().subscribe((data:any)=>{
+        if(data.nuevo_cliente){
+
+          Swal.fire({
+            title: 'Primero que todo!',
+            type: 'info',
+            animation: true,
+            html: `
+              Necesitamos conocer mas sobre tu negocio!
+              Te vamos a realizar 3 preguntas para que tu
+              experiencia en la plataforma sea la mejor!
+            `,
+            confirmButtonText: 'Comenzar',
+            allowOutsideClick: false
+          }).then(()=>{
+
+            Swal.mixin({
+              input: 'select',
+              inputPlaceholder : 'Selecciona una opción',
+              inputValidator: function (value) {
+                return new Promise(function (resolve, reject) {
+                  if (value !== '') {
+                    resolve();
+                  } else {
+                    resolve('Debes seleccionar una opción');
+                  }
+                });
+              },
+              confirmButtonText: 'Siguiente &rarr;',
+              progressSteps: ['1', '2', '3'],
+              allowOutsideClick: false
+            }).queue([
+              {
+                title: '¿Cual es la comida que preparan en su local?',
+                text: 'su respuesta le permitirá tener una mejor experiencia en la plataforma',
+                inputOptions: {
+                  'sushi' : 'Sushi',
+                  'sandwiches' : 'Sandwiches' ,
+                  'pizza' : 'Pizza',
+                  'otro' : 'Otro'
+                },
+              },
+              {
+                title: '¿Con cuantos repartidores trabaja actualmente',
+                text: 'su respuesta le permitirá tener una mejor experiencia en la plataforma',
+                inputOptions: {
+                  '1' : '1',
+                  '2' : '2' ,
+                  '3' : '3',
+                  '4' : 'más de 4'
+                },
+              },
+              {
+                title: '¿Otra pregunta?',
+                text: 'su respuesta le permitirá tener una mejor experiencia en la plataforma',
+                inputOptions: {
+                  '1' : 'pregunta',
+                  '2' : 'pregunta' ,
+                  '3' : 'pregunta',
+                  '4' : 'pregunta'
+                },
+  
+              }
+            ]).then((result) => {
+              if (result.value) {
+                console.log('tipo local: '+ result.value[0] + ' numero de conductores: '+ result.value[1])
+                this.db.collection('locales').doc(`${this.nombre}`).update({
+                  tipo_local: `${result.value[0]}`,
+                  nuevo_cliente : false
+                }).then(()=>{
+                  console.log('actualizado con exito!');
+                });
+  
+                Swal.fire({
+                  title: 'Todo Listo!',
+                  type: 'success',
+                  html: `
+                    Comienza a utilizar delivapp!
+                  `,
+                  confirmButtonText: 'Disfruta!!'
+                });
+              }
+            })
+          })
+        }else{
+          return false
+        }
+      })
+
+      
 
     if(this.estado){
       if(this.estado == 'dia'){
@@ -262,7 +355,8 @@ export class ContenidoComponent {
     this.db.collection('locales').doc(`${this.nombre}`).valueChanges().subscribe((data:InfoEmpresa)=>{
       if(data){
         this.infoEmpresa = data;
-        console.log(this.infoEmpresa);
+        localStorage.setItem('tipo_local', this.infoEmpresa.tipo_local);
+        console.log(this.infoEmpresa.tipo_local);
       }else{
         console.log('no hay info de local');
       }
@@ -433,7 +527,7 @@ export class ContenidoComponent {
       type: 'warning',
       title: `dejando de seguir a ${this.nombreConductor} ${this.apellidoConductor}`
     });
-
+    this.map.setZoom(16);
     this.nombreConductor = null;
     this.claveConductor = null;
     this.claveCompartir = null;

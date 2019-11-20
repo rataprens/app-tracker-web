@@ -34,6 +34,7 @@
     "ngx-clipboard": "^12.0.0",
     "ngx-google-places-autocomplete": "^2.0.3",
     "rxjs": "~6.2.0",
+    "simplebar-angular": "^2.0.1",
     "sweetalert2": "^8.8.1",
     "zone.js": "~0.8.26"
   },

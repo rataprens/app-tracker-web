@@ -6,9 +6,23 @@
     max-width: 400px;
 }
 
+.aref{
+    /* font-family: 'Aref Ruqaa', serif; */
+    font-family: 'Carrois Gothic SC', sans-serif;
+}
+
+.oregano{
+    font-family: 'Oregano', cursive;
+  }
+
 .example-header-image {
     background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
     background-size: cover;
+}
+
+.container-class{
+    font-family: inherit;
+    font-family: 'Oregano', cursive;
 }
 
 .example-container {
@@ -22,4 +36,27 @@
 
 ::ng-deep .mat-content {
     overflow: visible !important;
+}
+
+
+
+::ng-deep .mat-tab-list:first-child {
+    padding-left: calc(25%) !important; 
+}
+
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+    color:black;
+    background-color: lightblue;
+}
+
+.example-card {
+    margin-left: calc(25%) !important;
+    width: 300px;
+    height: 400px;
+    border-radius: 10px
+}
+
+.example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
 }

@@ -84,25 +84,25 @@ export class MainNavComponent implements OnDestroy{
       public router: Router, public auth:AuthService, public db:AngularFirestore,
       public seguirSer:SeguirService, public buscarSer: BuscarService, 
       public cambiarTemaService:CambiarTemaService, public eliminarMarker:EliminarMarkerService,
-      public iconRegistry: MatIconRegistry, public sanitizer: DomSanitizer) {
+      public iconRegistry: MatIconRegistry, public sanitizer: DomSanitizer,) {
 
-    this.estadoDia = 'Dia';
+    this.estadoDia = 'dia';
     this.icono = faSun;
     
     if(localStorage.getItem('estado')){
       console.log("existe en el local storage el estado");
       if(localStorage.getItem('estado') == 'noche'){
         console.log("El estado es NOCHE");
-        this.estadoDia = 'Noche';
+        this.estadoDia = 'noche';
         this.icono = faMoon;
       }else{
         console.log("El estado es Dia");
-        this.estadoDia = 'Dia';
+        this.estadoDia = 'dia';
         this.icono = faSun;
       }
     }else{
       console.log("no existe en el local storage el estado");
-      this.estadoDia = 'Dia';
+      this.estadoDia = 'dia';
         this.icono = faSun;
     }
 
@@ -158,6 +158,10 @@ export class MainNavComponent implements OnDestroy{
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
+  cerrar_menu(snav:any){
+    snav.close();
   }
 
   shouldRun = true;
@@ -229,10 +233,13 @@ handleAddressChange(address: Address){
   this.lat = address.geometry.location.lat();
   this.lng = address.geometry.location.lng();
 
+  this.router.navigateByUrl('/contenido', {}).then(()=>{
+  })
   this.buscarSer.emitChange({
     lat: this.lat,
     lng: this.lng  
   });
+
 }
 
 onKeydown(){
@@ -252,8 +259,8 @@ borrar(){
 }
 
   
-logout(){
-
+logout(snav){
+  snav.close();
   Swal.fire({
     title: "¿Está seguro?",
     text: "Desea Cerrar Sesión",
@@ -283,6 +290,7 @@ logout(){
       localStorage.removeItem('nombre');
       localStorage.removeItem('clave');
       localStorage.removeItem('estado');
+      localStorage.removeItem('tipo_local');
       sessionStorage.removeItem('login');
       this.router.navigate(['/login']);
     }else{

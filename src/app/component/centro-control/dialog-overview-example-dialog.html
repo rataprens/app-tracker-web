@@ -1,0 +1,23 @@
+<h1 mat-dialog-title class="aref">¡para finalizar, ahora debes elegir los ingredientes de tu producto!</h1>
+<div mat-dialog-content>
+  <p class="aref">¿Que ingredientes utiliza tu producto?</p>
+  <mat-form-field class="w3-center">
+      <mat-label class="aref">Selecciona una opción</mat-label>
+      <mat-select [(value)]="selected" #select_ingrediente>
+        <mat-option *ngFor="let ingrediente of dataSource_ingredientes" value="{{ingrediente.nombre}}"> <span class="aref">{{ingrediente.nombre}}</span></mat-option>
+      </mat-select>
+    </mat-form-field>
+</div>
+<hr *ngIf="seleccion_ingredientes.length > 0">
+<span *ngIf="seleccion_ingredientes.length > 0" class="w3-center aref"> <b> ingredientes seleccionados</b></span>
+<div>
+  <mat-list role="list" class="w3-center">
+      <mat-list-item *ngFor="let ingrediente_seleccionado of seleccion_ingredientes" role="listitem"> <span class="aref"> {{ingrediente_seleccionado}}</span> </mat-list-item>
+  </mat-list>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="agregarIngrediente()"> <span class="aref">Agregar</span> </button>
+  <button mat-raised-button color="primary" (click)="onNoClick()" cdkFocusInitial> <span class="aref">Terminado!</span> </button>
+  <button mat-button color="primary" (click)="salirModal()" style="width:10vw; height:3vh"> <span class="aref" style="font-size:10px"> <b>Quiero salir!</b> </span> </button>
+</div>

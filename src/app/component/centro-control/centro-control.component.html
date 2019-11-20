@@ -1,0 +1,176 @@
+<mat-tab-group>
+  <mat-tab>
+    <ng-template mat-tab-label>
+       <span class="aref"><b>Ingredientes</b></span>  &nbsp;
+        <fa-icon [icon]="faPencilAlt"></fa-icon>
+    </ng-template>
+    <div style="height:2vh">
+
+    </div>
+    <div class="mat-elevation-z8" style="width:93%; margin-left:3vw; border-radius: 10px">
+        <button mat-fab style="position:absolute; right:20px; top:0px" (click)="agregarIngrediente()"><mat-icon aria-hidden="false" >add</mat-icon></button>
+        <table mat-table [dataSource]="dataSource_ingredientes" style="width:100%; border-radius:10px">
+
+            <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle_ingredientes() : null"
+                            [checked]="selection.hasValue() && isAllSelected_ingredientes()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected_ingredientes()"
+                            [aria-label]="checkboxLabel_ingredientes()">
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                            [aria-label]="checkboxLabel_ingredientes(row)">
+                </mat-checkbox>
+            </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre</b></span>  </th>
+            <td mat-cell *matCellDef="let ingrediente"> <span class="aref"><b>  {{ingrediente.nombre}}</b></span>  </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="stock">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>stock</b></span>  </th>
+            <td mat-cell *matCellDef="let ingrediente"> <span class="aref"><b>{{ingrediente.stock}} </b></span> </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="precio">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Precio ($CLP)</b></span>  </th>
+            <td mat-cell *matCellDef="let ingrediente"> <span class="aref"><b>${{ingrediente.precio}}</b></span>  </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="columna_ingredientes"></tr>
+            <tr mat-row *matRowDef="let row; columns: columna_ingredientes;"></tr>
+        </table>
+        
+        <mat-paginator #paginator_ingredientes [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</mat-tab>
+<mat-tab>
+    <ng-template mat-tab-label>
+            <span class="aref"><b>Catálogo</b></span>  &nbsp;
+        <fa-icon [icon]="faTicketAlt"></fa-icon>
+    </ng-template>
+    <div style="height:2vh">
+           
+    </div>
+    <div class="mat-elevation-z8" style="width:93%; margin-left:3vw; border-radius: 10px">
+            <button mat-fab style="position:absolute; right:20px; top:0px" (click)="agregarProducto()"><mat-icon aria-hidden="false" >add</mat-icon></button>
+            <table mat-table [dataSource]="dataSource_catalogo" style="width:100%; border-radius:10px">
+            
+                <!-- tipo producto Column -->
+                <ng-container matColumnDef="tipo_producto">
+                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Tipo Producto</b></span>  </th>
+                <td mat-cell *matCellDef="let catalogo"> <span class="aref"><b>{{catalogo.tipo_producto}} </b></span> </td>
+                </ng-container>
+
+                <!-- nombre producto Column -->
+                <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre Producto</b></span>  </th>
+                <td mat-cell *matCellDef="let catalogo"> <span class="aref"><b>  {{catalogo.nombre_producto}}</b></span>  </td>
+                </ng-container>
+            
+                <!-- precio producto Column -->
+                <ng-container matColumnDef="ingredientes">
+                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Ingredientes</b></span>  </th>
+                <td mat-cell *matCellDef="let catalogo"> <span class="aref"><b>{{catalogo.ingredientes}}</b></span>  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="precio">
+                    <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Precio ($CLP)</b></span>  </th>
+                    <td mat-cell *matCellDef="let catalogo"> <span class="aref"><b>${{catalogo.precio_producto}}</b></span>  </td>
+                </ng-container>
+            
+                <tr mat-header-row *matHeaderRowDef="columna_catalogo"></tr>
+                <tr mat-row *matRowDef="let row; columns: columna_catalogo;"></tr>
+            </table>
+            
+            <mat-paginator #paginator_catalogo [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+</mat-tab>
+<mat-tab>
+    <ng-template mat-tab-label>
+            <span class="aref"><b>Conductores</b></span>  &nbsp;
+        <fa-icon [icon]="faCarAlt"></fa-icon>
+    </ng-template>
+    <div style="height:2vh">
+           
+    </div>
+    <div class="mat-elevation-z8" style="width:93%; margin-left:3vw; border-radius: 10px">
+        <button mat-fab style="position:absolute; right:20px; top:0px" (click)="crearConductor()"><mat-icon aria-hidden="false" >add</mat-icon></button>
+        <table mat-table [dataSource]="dataSource_conductores" style="width:100%; border-radius:10px">
+        
+            <!-- tipo producto Column -->
+            <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre Conductor</b></span>  </th>
+            <td mat-cell *matCellDef="let conductor"> <span class="aref"><b>{{conductor.nombre}} </b></span> </td>
+            </ng-container>
+
+            <!-- nombre producto Column -->
+            <ng-container matColumnDef="apellido">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Conductor Apellido</b></span>  </th>
+            <td mat-cell *matCellDef="let conductor"> <span class="aref"><b>  {{conductor.apellido}}</b></span>  </td>
+            </ng-container>
+        
+            <!-- precio producto Column -->
+            <ng-container matColumnDef="empresa">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Empresa</b></span>  </th>
+            <td mat-cell *matCellDef="let conductor"> <span class="aref"><b>{{conductor.empresa}}</b></span>  </td>
+            </ng-container>
+
+            <ng-container matColumnDef="online">
+                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Online</b></span>  </th>
+                <td mat-cell *matCellDef="let conductor"> <span class="aref"><b>{{conductor.online}}</b></span>  </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="columna_conductor"></tr>
+            <tr mat-row *matRowDef="let row; columns: columna_conductor;"></tr>
+        </table>
+        
+        <mat-paginator #paginator_conductor [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</mat-tab>
+<mat-tab>
+    <ng-template mat-tab-label>
+            <span class="aref"><b>Clientes</b></span>  &nbsp;
+        <fa-icon [icon]="faUser"></fa-icon>
+    </ng-template>
+    <div style="height:2vh">
+           
+    </div>
+    <div class="mat-elevation-z8" style="width:93%; margin-left:3vw; border-radius: 10px">
+       <!--  <button mat-fab style="position:absolute; right:20px; top:0px" (click)="crearConductor()"><mat-icon aria-hidden="false" >add</mat-icon></button> -->
+        <table mat-table [dataSource]="dataSource_clientes" style="width:100%; border-radius:10px">
+        
+            <!-- tipo producto Column -->
+            <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre cliente</b></span>  </th>
+            <td mat-cell *matCellDef="let cliente"> <span class="aref"><b>{{cliente.nombre_cliente}} </b></span> </td>
+            </ng-container>
+
+            <!-- nombre producto Column -->
+            <ng-container matColumnDef="direccion">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Dirección</b></span>  </th>
+            <td mat-cell *matCellDef="let cliente"> <span class="aref"><b>  {{cliente.direccion}}</b></span>  </td>
+            </ng-container>
+        
+            <!-- precio producto Column -->
+            <ng-container matColumnDef="telefono">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Teléfono</b></span>  </th>
+            <td mat-cell *matCellDef="let cliente"> <span class="aref"><b>{{cliente.telefono}}</b></span>  </td>
+            </ng-container>
+
+        
+            <tr mat-header-row *matHeaderRowDef="columna_cliente"></tr>
+            <tr mat-row *matRowDef="let row; columns: columna_cliente;"></tr>
+        </table>
+        
+        <mat-paginator #paginator_cliente [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</mat-tab>
+</mat-tab-group>

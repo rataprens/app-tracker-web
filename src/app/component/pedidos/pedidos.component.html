@@ -1,77 +1,209 @@
-<mat-grid-list cols="2" rowHeight="500px">
-    <mat-grid-tile>
-        <!-- Lista de los pedidos -->
-        <div class="example-container">
-            <!-- Pedidos Activos -->
+<mat-tab-group dynamicHeight>
+    <mat-tab>
+      <ng-template mat-tab-label >
+          <span class="aref" style="font-size:13px"><b> pedidos activos</b> </span> &nbsp;
+            <fa-icon style="margin-top:0.3vh" [icon]="faClock"></fa-icon>
+        </ng-template>
+        <div style="height:2vh">
 
-            <mat-expansion-panel>
-                <mat-expansion-panel-header [collapsedHeight]="'80px'">
-                    <mat-panel-title>
-                        Pedidos Activos
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        <span [matBadge]="pedidosActivosTotal" matBadgePosition="after above" matBadgeOverlap="false" matBadgeColor="warn"> Presiona para mas detalles</span>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-                <mat-list-item *ngFor="let pedido of pedidosActivos" role="listitem">
-                    <button mat-raised-button (click)="openBottomSheet(pedido)" color="primary">
-                        {{pedido.tipoPedido}} - {{pedido.nombre}}
-                    </button>
-                </mat-list-item>
-            </mat-expansion-panel>
-            <!-- Pedidos Realizados -->
-            <mat-expansion-panel>
-                <mat-expansion-panel-header [collapsedHeight]="'80px'">
-                    <mat-panel-title>
-                        Pedidos Realizados
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        <span [matBadge]="pedidosEntregadosTotal" matBadgePosition="after above" matBadgeOverlap="false" matBadgeColor="warn">Presiona para mas detalles</span>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
+          </div>
+        <div class="mat-elevation-z8" style="width:93%; margin-left:3vw; border-radius: 10px">
+            <table mat-table [dataSource]="dataSource_pedidos_activos" style="width:100%; border-radius: 10px">
+       
+              <ng-container matColumnDef="nombre_cliente">
+                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre Cliente</b></span>  </th>
+                <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>{{pedido.nombre_cliente}} </b></span></td>
+              </ng-container>
 
-                <mat-list-item *ngFor="let pedido of pedidosEntregados" role="listitem">
-                    <button mat-raised-button (click)="openBottomSheet(pedido)" color="primary">
-                            {{pedido.tipoPedido}} - {{pedido.nombre}}
-                        </button>
-                </mat-list-item>
-            </mat-expansion-panel>
+              <ng-container matColumnDef="telefono_cliente">
+                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Telefono Cliente</b></span>  </th>
+                <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>{{pedido.telefono_cliente}} </b></span>  </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="repartidor">
+                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre Repartidor</b></span>  </th>
+                <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>{{pedido.nombre_repartidor}}</b></span>  </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="direccion">
+                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Dirección Cliente</b></span>   </th>
+                <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>  {{pedido.direccion}}</b></span>  </td>
+              </ng-container>
+
+              <ng-container matColumnDef="monto_total">
+                  <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Monto Total</b></span>   </th>
+                  <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>  {{pedido.monto_total}}</b></span>  </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="columna_pedido_activo"></tr>
+              <tr mat-row *matRowDef="let row; columns: columna_pedido_activo;"></tr>
+            </table>
+          
+            <mat-paginator #paginator_pedidos_activos [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <span class="aref" style="font-size:13px"><b> pedidos realizados</b> </span>&nbsp;
+            <fa-icon style="margin-top:0.3vh" [icon]="faCheckSquare"></fa-icon>
+        </ng-template>
+        <div style="height:2vh">
 
         </div>
+        <div class="mat-elevation-z8" style="width:93%; margin-left:3vw; border-radius: 10px">
+            <table mat-table [dataSource]="dataSource_pedidos_realizados" style="width:100%">
+          
+              <ng-container matColumnDef="nombre_cliente">
+                  <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre Cliente</b></span>  </th>
+                  <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>{{pedido.nombre_cliente}} </b></span></td>
+                </ng-container>
+  
+                <ng-container matColumnDef="telefono_cliente">
+                  <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Telefono Cliente</b></span>  </th>
+                  <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>{{pedido.telefono_cliente}} </b></span>  </td>
+                </ng-container>
+            
+                <ng-container matColumnDef="repartidor">
+                  <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre Repartidor</b></span>  </th>
+                  <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>{{pedido.nombre_repartidor}}</b></span>  </td>
+                </ng-container>
+            
+                <ng-container matColumnDef="direccion">
+                  <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Dirección Cliente</b></span>   </th>
+                  <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>  {{pedido.direccion}}</b></span>  </td>
+                </ng-container>
+  
+                <ng-container matColumnDef="monto_total">
+                    <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Monto Total</b></span>   </th>
+                    <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>  {{pedido.monto_total}}</b></span>  </td>
+                </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columna_pedido_realizado"></tr>
+              <tr mat-row *matRowDef="let row; columns: columna_pedido_realizado;"></tr>
+            </table>
+          
+            <mat-paginator #paginator_pedidos_realizados [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-tab>
+    <mat-tab>
+            <ng-template mat-tab-label>
+                <span  class="aref" style="font-size:13px"><b> nuevo pedido</b> </span> &nbsp;
+                <fa-icon style="margin-top:0.3vh" [icon]="faPlusCircle"></fa-icon>
+            </ng-template>
+            <div style="height:2vh">
+
+            </div>
+            <div style="width:93%; margin-left:3vw;"> 
+              <!-- FORM PARA PEDIDOS DE SUSHI -->
+              <form *ngIf="this.tipo_local == 'sushi'" class="example-container" novalidate [formGroup]="pedidoFormulario" style="width:93%; margin-left:3vw;">
+                      <h4>crear pedido sushi</h4>
+                      <mat-form-field>
+                          <input matInput [options]="options" formControlName="direccionCliente" required ngx-google-places-autocomplete #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" placeholder="Dirección">
+                      </mat-form-field>
+                      <mat-form-field>
+                          <input matInput formControlName="nombreCliente" required placeholder="Nombre Cliente">
+          
+                      </mat-form-field>
+                      <mat-form-field>
+                          <span matPrefix>+569 &nbsp;</span>
+                          <input matInput formControlName="numeroTelefono" required type="number" placeholder="Numero de Telefono">
+          
+                      </mat-form-field>
+                      <mat-form-field>
+                          <input matInput formControlName="tipoPedido" required placeholder="Tipo Pedido">
+          
+                      </mat-form-field>
+                      <mat-form-field>
+                          <mat-select formControlName="clave_conductor" placeholder="Conductor">
+                              <mat-option *ngFor="let conductor of conductores" [value]="conductor.clave">{{conductor.nombre}} {{conductor.apellido}}</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                      <mat-form-field>
+                          <span matPrefix>&#36; &nbsp;</span>
+                          <input matInput formControlName="totalPagar" required type="number" placeholder="Total a Pagar">
+          
+                      </mat-form-field>
+                      <button type="submit" [disabled]="pedidoFormulario.invalid" mat-raised-button color="primary" (click)="crearPedido(pedidoFormulario.value)" mat-button>Crear Pedido y Asignar</button>
+              </form>
+
+              <!-- FORM PARA PEDIDOS DE SANDWICH -->
+<!--               <form *ngIf="this.tipo_local == 'sandwiches'" class="example-container" novalidate [formGroup]="pedidoFormulario" style="width:93%; margin-left:3vw;">
+                  <h4 class="aref">Crear Pedido Sandwich</h4>
+                  <mat-form-field>
+                      <input matInput [options]="options" formControlName="direccionCliente" required ngx-google-places-autocomplete #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" placeholder="Dirección">
+                  </mat-form-field>
+                  <mat-form-field>
+                      <input matInput formControlName="nombreCliente" required placeholder="Nombre Cliente">
+      
+                  </mat-form-field>
+                  <mat-form-field>
+                      <span matPrefix>+569 &nbsp;</span>
+                      <input matInput formControlName="numeroTelefono" required type="number" placeholder="Numero de Telefono">
+      
+                  </mat-form-field>
+                  <mat-form-field>
+                      <input matInput formControlName="tipoPedido" required placeholder="Tipo Pedido">
+      
+                  </mat-form-field>
+                  <mat-form-field>
+                      <mat-select formControlName="clave_conductor" placeholder="Conductor">
+                          <mat-option *ngFor="let conductor of conductores" [value]="conductor.clave">{{conductor.nombre}} {{conductor.apellido}}</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+                  <mat-form-field>
+                      <span matPrefix>&#36; &nbsp;</span>
+                      <input matInput formControlName="totalPagar" required type="number" placeholder="Total a Pagar">
+      
+                  </mat-form-field>
+                  <button type="submit" [disabled]="pedidoFormulario.invalid" mat-raised-button color="primary" (click)="crearPedido(pedidoFormulario.value)" mat-button>Crear Pedido y Asignar</button>
+              </form> -->
+              <mat-grid-list cols="2" rowHeight="500px" *ngIf="this.tipo_local == 'sandwiches'">
+                <mat-grid-tile >
+                  <mat-card  class="example-card">
+                 
+                      <mat-card-header>
+                        <!--  <div mat-card-avatar class="example-header-image"></div> -->
+                        <mat-card-title class="w3-center aref">Sandwich</mat-card-title>
+                        <mat-card-subtitle class="w3-center aref">Presiona aqui si quieres crear un nuevo pedido de sandwich</mat-card-subtitle>
+                      </mat-card-header>
+                      <img mat-card-image src="https://www.enmicocinahoy.cl/wp-content/uploads/2014/11/lomito-casero-sandwich-2-1024x693.jpg" alt="Photo of a Shiba Inu">
+                      <mat-card-actions class="w3-center">
+                        <button mat-raised-button color="primary" (click)="prepararPedido('sandwich')"> <span class="aref"><b>preparar pedido</b></span> </button>
+                      <!--   <button mat-button>SHARE</button> -->
+                      </mat-card-actions>
+                  </mat-card>
+                </mat-grid-tile>
+                <mat-grid-tile >
+                  <mat-card *ngIf="this.tipo_local == 'sandwiches'" class="example-card">
+                 
+                      <mat-card-header>
+                        <!--  <div mat-card-avatar class="example-header-image"></div> -->
+                        <mat-card-title class="w3-center aref">Completo</mat-card-title>
+                        <mat-card-subtitle class="w3-center aref">Presiona aqui si quieres crear un nuevo pedido de completo</mat-card-subtitle>
+                      </mat-card-header>
+                      <img mat-card-image src="https://t1.rg.ltmcdn.com/es/images/4/7/8/img_completo_casero_8874_600.jpg" alt="Photo of a Shiba Inu">
+                      <mat-card-actions class="w3-center">
+                        <button mat-raised-button color="primary" (click)="prepararPedido('completo')"> <span class="aref"><b>preparar pedido</b></span> </button>
+                        <!-- <button mat-button>SHARE</button> -->
+                      </mat-card-actions>
+                  </mat-card>
+                </mat-grid-tile>
+              </mat-grid-list>
+
+            </div>
+    </mat-tab>
+   <!--  -->
+</mat-tab-group>
+
+<!-- <mat-grid-list cols="2" rowHeight="500px">
+    <mat-grid-tile>
+    
+
     </mat-grid-tile>
     <mat-grid-tile>
-        <!-- Crear nuevo pedido -->
-        <form class="example-container" novalidate [formGroup]="pedidoFormulario">
-            <h4>Crear Pedido</h4>
-            <mat-form-field>
-                <input matInput [options]="options" formControlName="direccionCliente" required ngx-google-places-autocomplete #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" placeholder="Dirección">
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput formControlName="nombreCliente" required placeholder="Nombre Cliente">
-
-            </mat-form-field>
-            <mat-form-field>
-                <span matPrefix>+569 &nbsp;</span>
-                <input matInput formControlName="numeroTelefono" required type="number" placeholder="Numero de Telefono">
-
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput formControlName="tipoPedido" required placeholder="Tipo Pedido">
-
-            </mat-form-field>
-            <mat-form-field>
-                <mat-select formControlName="clave_conductor" placeholder="Conductor">
-                    <mat-option *ngFor="let conductor of conductores" [value]="conductor.clave">{{conductor.nombre}} {{conductor.apellido}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field>
-                <span matPrefix>&#36; &nbsp;</span>
-                <input matInput formControlName="totalPagar" required type="number" placeholder="Total a Pagar">
-
-            </mat-form-field>
-            <button type="submit" [disabled]="pedidoFormulario.invalid" mat-raised-button color="primary" (click)="crearPedido(pedidoFormulario.value)" mat-button>Crear Pedido y Asignar</button>
-        </form>
+      
+  
 
 
     </mat-grid-tile>
-</mat-grid-list>
+</mat-grid-list> -->
