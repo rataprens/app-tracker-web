@@ -28,7 +28,7 @@
         </mat-form-field>
 
         <mat-form-field class="group">
-            <input id="inputClave" matInput placeholder="Contraseña" type="password" [(ngModel)]="clave" required>
+            <input id="inputClave" matInput placeholder="Contraseña" type="password" (keyup.enter)="ingresar(nombre, clave)" [(ngModel)]="clave" required>
             <button mat-button *ngIf="clave" matSuffix mat-icon-button aria-label="Clear" (click)="mostrar()">
                     <fa-icon *ngIf="!isMostrar" aria-hidden="false" [icon]="faEyeSlash"></fa-icon>
                     <fa-icon *ngIf="isMostrar" aria-hidden="false" [icon]="faEye"></fa-icon>

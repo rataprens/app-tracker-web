@@ -76,39 +76,37 @@ export class CentroControlComponent implements OnInit {
       console.log(this.paginator_catalogo)
       this.dataSource_catalogo.paginator = this.paginator_catalogo;
       console.log(this.dataSource_catalogo.data);
-      
-    })
+    });
   }
-
-    /** Whether the number of selected elements matches the total number of rows. */
-    isAllSelected_ingredientes() {
-      const numSelected = this.selection.selected.length;
-      const numRows = this.data_ingredientes.length;
-      return numSelected === numRows;
-    }
-  
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle_ingredientes() {
-      this.isAllSelected_ingredientes() ?
-          this.selection.clear() :
-          this.data_ingredientes.forEach(row => this.selection.select(row));
-    }
-  
-    /** The label for the checkbox on the passed row */
-    checkboxLabel_ingredientes(row?: any): string {
-      if (!row) {
-        return `${this.isAllSelected_ingredientes() ? 'select' : 'deselect'} all`;
-      }
-      return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-    }
-
+    
   ngOnInit() {
     this.paginator_ingredientes._intl.itemsPerPageLabel = 'items por página';
+  }
+  
+  isAllSelected_ingredientes() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.data_ingredientes.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle_ingredientes() {
+    this.isAllSelected_ingredientes() ?
+        this.selection.clear() :
+        this.data_ingredientes.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel_ingredientes(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected_ingredientes() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
   openDialog(tipo_producto:string, nombre_producto:string, precio:number){
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      width: '390px',
+      width: '450px',
       data: {tipo_producto: tipo_producto, nombre_producto: nombre_producto, precio_producto: precio},
       disableClose: true
     });

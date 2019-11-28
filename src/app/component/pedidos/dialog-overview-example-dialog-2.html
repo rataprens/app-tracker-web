@@ -1,0 +1,87 @@
+
+<div class="w3-center">
+  <mat-grid-list cols="4" rowHeight="2:1">
+    <mat-grid-tile colspan="3" style="">
+        <h1 mat-dialog-title class="aref">¡ultimos pasos, ¿deseas agregar ingredientes extras?!</h1>
+   </mat-grid-tile>
+    <mat-grid-tile colspan="1" style=" width:20vw">
+      <button mat-button (click)="verIngredientes()" style="width: 20px; margin-right:10vw; border-radius: 50%">
+        <mat-icon style="  ">add</mat-icon>
+      </button>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <div mat-dialog-content style="margin-top: 2vh;  " *ngIf="ver_ingredientes">
+    <p class="aref" style="">¿Que ingredientes deseas agregar al pedido? (max. 3)</p>
+    <mat-grid-list cols="4" rowHeight="100px" >
+      <mat-grid-tile colspan="2" style="  ">
+        <mat-form-field class="w3-center">
+            <mat-label class="aref">Selecciona una opción</mat-label>
+            <mat-select [(value)]="selected" #select_ingrediente>
+              <mat-option *ngFor="let ingrediente of dataSource_ingredientes" value="{{ingrediente.nombre}}"> <span class="aref">{{ingrediente.nombre}}</span></mat-option>
+            </mat-select>
+        </mat-form-field>
+      </mat-grid-tile >
+      <mat-grid-tile colspan="2" style="">
+        <button mat-raised-button color="primary" (click)="agregarIngrediente()" style="left:0px"> <span class="aref">Agregar</span> </button>
+        <div style="margin-left:13px">
+          <span *ngIf="seleccion_ingredientes.length > 0" class="w3-center aref" style="font-size:14px; top:0px;"> <b> ingredientes seleccionados</b></span>
+          <mat-list-item *ngFor="let ingrediente_seleccionado of seleccion_ingredientes" role="listitem"> <span class="aref w3-center" style="font-size:12px"> {{ingrediente_seleccionado.nombre_ingrediente}} &nbsp; $ {{ingrediente_seleccionado.precio_ingrediente}}</span> </mat-list-item>
+        </div>
+       
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+
+  <hr>
+  <mat-card style="  ">
+    
+      <span class="aref" style="font-size:15px; right: 0;"><b><u>Datos cliente</u></b></span>
+      <mat-grid-list cols="4" rowHeight="200px" style="">
+        <mat-grid-tile colspan="3" style="">
+            <div class="example-container" style="margin-right:15vw">
+                <mat-form-field style="margin-left:10px; width:100%">
+                  <input matInput type="number" placeholder="Telefono">
+                  <span matPrefix>+569 &nbsp;</span>
+                </mat-form-field>
+              
+                <mat-form-field style="margin-left:10px; width:100%">
+                    <input matInput placeholder="Nombre Cliente">
+                </mat-form-field>
+
+                <mat-form-field style="margin-left:10px; width:100%" *ngIf="data.tipo_entrega === 'reparto'">
+                    <input matInput placeholder="Dirección">
+                </mat-form-field>
+              </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+  </mat-card>
+  
+  <mat-card style="height:30vh;  ">
+    
+    <span class="aref" style="font-size:15px; right: 0;"><b><u>Detalle del pedido</u></b></span>
+    <mat-grid-list cols="4" rowHeight="150px" style="">
+      <mat-grid-tile colspan="2">
+        <mat-list style="margin-right: 10vw;">
+          <ng-container *ngFor="let pedido of pedidos">
+            <mat-list-item style="height:20px; font-size: 12px" class="no-wrap"><b>Cantidad: </b> &nbsp; {{pedido.cantidad}} x {{pedido.tipo_producto}} {{pedido.nombre_producto}}</mat-list-item>
+            <mat-list-item style="height:20px; font-size: 12px" class="no-wrap"><b>Tipo de entrega: </b> &nbsp; {{pedido.tipo_entrega}}</mat-list-item>
+            <mat-list-item *ngIf="seleccion_ingredientes.length > 0" style="height:20px; font-size: 12px" class="no-wrap"><b>Ingredientes: </b> &nbsp; <span *ngFor="let ingrediente of seleccion_ingredientes"> {{ingrediente.nombre_ingrediente}} ,</span></mat-list-item>
+          </ng-container>
+          <hr style="">
+          <mat-list-item style="height:20px; font-size: 12px" class="no-wrap"><b>Monto total: </b>&nbsp; $ {{monto_total}} </mat-list-item>
+        </mat-list>
+        
+        
+      </mat-grid-tile>
+      <mat-grid-tile colspan="2" style="">
+       <!--  <span class="aref" style="font-size:12px"><b>Otras opciones</b></span> -->
+        <mat-list>
+          <mat-list-item style="margin-left:30px; height: 30px;"><span class="aref" style="font-size:12px"><b><u>Otras opciones</u></b></span></mat-list-item>
+          <mat-list-item style="height:40px; margin-left:10px"><button mat-raised-button color="primary" (click)="agregarNuevoProducto()">Agregar otro producto</button></mat-list-item>
+          <mat-list-item style="height:40px; margin-left:10px"><button mat-raised-button color="primary" (click)="onNoClick()" cdkFocusInitial> <span class="aref">Terminado!</span> </button></mat-list-item>
+          <mat-list-item style="height:40px; margin-left:10px"> <button mat-button color="primary" (click)="salirModal()" style="width:10vw; height:3vh"> <span class="aref" style="font-size:10px"> <b>Quiero salir!</b> </span> </button></mat-list-item>
+        </mat-list>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card> 
+</div>

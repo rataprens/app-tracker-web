@@ -35,13 +35,14 @@ import { AgmDirectionModule } from 'agm-direction';
 import { CambiarTemaService } from './services/cambiar-tema.service';
 import { ChatComponent } from './component/chat/chat.component';
 import { CrearRutaComponent } from './component/crear-ruta/crear-ruta.component';
-import { PedidosComponent, BottomSheetOverviewExampleSheet } from './component/pedidos/pedidos.component';
+import { PedidosComponent, BottomSheetOverviewExampleSheet, DialogOverviewExampleDialog2 } from './component/pedidos/pedidos.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { VerDireccionClienteService } from './services/ver-direccion-cliente.service';
 import { HttpClientModule } from "@angular/common/http";
 import { CentroControlComponent, DialogOverviewExampleDialog } from './component/centro-control/centro-control.component';
 import { SimplebarAngularModule } from 'simplebar-angular';
+import { AgregarNuevoProductoService } from './services/agregar-nuevo-producto.service';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { SimplebarAngularModule } from 'simplebar-angular';
     PedidosComponent,
     BottomSheetOverviewExampleSheet,
     CentroControlComponent,
-    DialogOverviewExampleDialog
+    DialogOverviewExampleDialog,
+    DialogOverviewExampleDialog2
   ],
   imports: [
     BrowserModule,
@@ -99,7 +101,7 @@ import { SimplebarAngularModule } from 'simplebar-angular';
     SimplebarAngularModule,
     MatDialogModule
   ],
-  entryComponents: [BottomSheetOverviewExampleSheet, PedidosComponent, DialogOverviewExampleDialog],
+  entryComponents: [BottomSheetOverviewExampleSheet, PedidosComponent, DialogOverviewExampleDialog, DialogOverviewExampleDialog2],
   providers: [
     AuthService,
     LoginVerificacionService,
@@ -107,7 +109,8 @@ import { SimplebarAngularModule } from 'simplebar-angular';
     BuscarService,
     CambiarTemaService,
     BottomSheetOverviewExampleSheet,
-    VerDireccionClienteService
+    VerDireccionClienteService,
+    AgregarNuevoProductoService
   ],
   bootstrap: [AppComponent]
 })

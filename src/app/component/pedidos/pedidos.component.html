@@ -31,8 +31,8 @@
               </ng-container>
 
               <ng-container matColumnDef="monto_total">
-                  <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Monto Total</b></span>   </th>
-                  <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>  {{pedido.monto_total}}</b></span>  </td>
+                  <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Monto Total ($CLP)</b></span>   </th>
+                  <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>${{pedido.monto_total}}</b></span>  </td>
               </ng-container>
           
               <tr mat-header-row *matHeaderRowDef="columna_pedido_activo"></tr>
@@ -74,8 +74,8 @@
                 </ng-container>
   
                 <ng-container matColumnDef="monto_total">
-                    <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Monto Total</b></span>   </th>
-                    <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>  {{pedido.monto_total}}</b></span>  </td>
+                    <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Monto Total ($CLP) </b></span>   </th>
+                    <td mat-cell *matCellDef="let pedido"> <span class="aref"><b>${{pedido.monto_total}}</b></span>  </td>
                 </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="columna_pedido_realizado"></tr>
@@ -163,7 +163,7 @@
                  
                       <mat-card-header>
                         <!--  <div mat-card-avatar class="example-header-image"></div> -->
-                        <mat-card-title class="w3-center aref">Sandwich</mat-card-title>
+                        <mat-card-title class="w3-center aref"> <b>Sandwich</b></mat-card-title>
                         <mat-card-subtitle class="w3-center aref">Presiona aqui si quieres crear un nuevo pedido de sandwich</mat-card-subtitle>
                       </mat-card-header>
                       <img mat-card-image src="https://www.enmicocinahoy.cl/wp-content/uploads/2014/11/lomito-casero-sandwich-2-1024x693.jpg" alt="Photo of a Shiba Inu">
@@ -178,7 +178,7 @@
                  
                       <mat-card-header>
                         <!--  <div mat-card-avatar class="example-header-image"></div> -->
-                        <mat-card-title class="w3-center aref">Completo</mat-card-title>
+                        <mat-card-title class="w3-center aref"> <b>Completo</b></mat-card-title>
                         <mat-card-subtitle class="w3-center aref">Presiona aqui si quieres crear un nuevo pedido de completo</mat-card-subtitle>
                       </mat-card-header>
                       <img mat-card-image src="https://t1.rg.ltmcdn.com/es/images/4/7/8/img_completo_casero_8874_600.jpg" alt="Photo of a Shiba Inu">
