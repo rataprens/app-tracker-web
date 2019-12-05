@@ -7,6 +7,7 @@ import { CrearRutaComponent } from './component/crear-ruta/crear-ruta.component'
 import { ChatComponent } from './component/chat/chat.component';
 import { PedidosComponent } from './component/pedidos/pedidos.component';
 import { CentroControlComponent } from './component/centro-control/centro-control.component';
+import { ReportesComponent } from './component/reportes/reportes.component';
 
 
 
@@ -15,6 +16,7 @@ const ROUTES: Routes = [
     { path: 'contenido', component: ContenidoComponent, canActivate: [AuthGuard] },
     { path: 'crearRuta', component: CrearRutaComponent, canActivate: [AuthGuard] },
     { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
+    { path: 'reportes', component: ReportesComponent, canActivate: [AuthGuard] },
     { path: 'centro-control', component: CentroControlComponent, canActivate: [AuthGuard] },
     { path: 'pedidos', component: PedidosComponent, canActivate: [AuthGuard] },
     { path: '**', pathMatch:'full', redirectTo: 'contenido' }

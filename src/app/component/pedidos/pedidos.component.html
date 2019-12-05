@@ -157,7 +157,7 @@
                   </mat-form-field>
                   <button type="submit" [disabled]="pedidoFormulario.invalid" mat-raised-button color="primary" (click)="crearPedido(pedidoFormulario.value)" mat-button>Crear Pedido y Asignar</button>
               </form> -->
-              <mat-grid-list cols="2" rowHeight="500px" *ngIf="this.tipo_local == 'sandwiches'">
+              <mat-grid-list cols="2" rowHeight="500px" *ngIf="this.tipo_local == 'sandwiches'" style="margin-right:10vw">
                 <mat-grid-tile >
                   <mat-card  class="example-card">
                  

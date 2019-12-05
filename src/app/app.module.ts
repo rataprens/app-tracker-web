@@ -43,6 +43,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { CentroControlComponent, DialogOverviewExampleDialog } from './component/centro-control/centro-control.component';
 import { SimplebarAngularModule } from 'simplebar-angular';
 import { AgregarNuevoProductoService } from './services/agregar-nuevo-producto.service';
+import { ReportesComponent } from './component/reportes/reportes.component';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import { AgregarNuevoProductoService } from './services/agregar-nuevo-producto.s
     BottomSheetOverviewExampleSheet,
     CentroControlComponent,
     DialogOverviewExampleDialog,
-    DialogOverviewExampleDialog2
+    DialogOverviewExampleDialog2,
+    ReportesComponent
   ],
   imports: [
     BrowserModule,

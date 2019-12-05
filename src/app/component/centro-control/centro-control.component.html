@@ -32,12 +32,7 @@
             <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre</b></span>  </th>
             <td mat-cell *matCellDef="let ingrediente"> <span class="aref"><b>  {{ingrediente.nombre}}</b></span>  </td>
             </ng-container>
-        
-            <ng-container matColumnDef="stock">
-            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>stock</b></span>  </th>
-            <td mat-cell *matCellDef="let ingrediente"> <span class="aref"><b>{{ingrediente.stock}} </b></span> </td>
-            </ng-container>
-        
+
             <ng-container matColumnDef="precio">
             <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Precio ($CLP)</b></span>  </th>
             <td mat-cell *matCellDef="let ingrediente"> <span class="aref"><b>${{ingrediente.precio}}</b></span>  </td>
@@ -102,7 +97,7 @@
            
     </div>
     <div class="mat-elevation-z8" style="width:93%; margin-left:3vw; border-radius: 10px">
-        <button mat-fab style="position:absolute; right:20px; top:0px" (click)="crearConductor()"><mat-icon aria-hidden="false" >add</mat-icon></button>
+       <!--  <button mat-fab style="position:absolute; right:20px; top:0px" (click)="crearConductor()"><mat-icon aria-hidden="false" >add</mat-icon></button> -->
         <table mat-table [dataSource]="dataSource_conductores" style="width:100%; border-radius:10px">
         
             <!-- tipo producto Column -->
@@ -113,19 +108,25 @@
 
             <!-- nombre producto Column -->
             <ng-container matColumnDef="apellido">
-            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Conductor Apellido</b></span>  </th>
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Apellido Conductor</b></span>  </th>
             <td mat-cell *matCellDef="let conductor"> <span class="aref"><b>  {{conductor.apellido}}</b></span>  </td>
             </ng-container>
         
             <!-- precio producto Column -->
-            <ng-container matColumnDef="empresa">
-            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Empresa</b></span>  </th>
-            <td mat-cell *matCellDef="let conductor"> <span class="aref"><b>{{conductor.empresa}}</b></span>  </td>
+            <ng-container matColumnDef="compartir">
+            <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Compartiendo Ruta</b></span>  </th>
+            <td mat-cell *matCellDef="let conductor"> 
+                <span class="aref" *ngIf="conductor.compartir"><b>Ruta compartida</b></span>
+                <span class="aref" *ngIf="!conductor.compartir"><b>Sin ruta compartida</b></span>  
+            </td>
             </ng-container>
 
             <ng-container matColumnDef="online">
-                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Online</b></span>  </th>
-                <td mat-cell *matCellDef="let conductor"> <span class="aref"><b>{{conductor.online}}</b></span>  </td>
+                <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Estado</b></span>  </th>
+                <td mat-cell *matCellDef="let conductor"> 
+                    <span class="aref" *ngIf="conductor.online"><b>Conectado</b></span>
+                    <span class="aref" *ngIf="!conductor.online"><b>Desconectado</b></span>
+                </td>
             </ng-container>
         
             <tr mat-header-row *matHeaderRowDef="columna_conductor"></tr>

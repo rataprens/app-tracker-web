@@ -45,6 +45,7 @@ export class PedidosComponent implements OnInit {
   pedidosActivos: any[];
   conductores: any[];
   pedidosNuevos: any = [];
+  inputOptions_comuna:any = {};
   pedidosActivosTotal: number;
   pedidosEntregadosTotal: number;
   valorFormulario: any;
@@ -53,10 +54,13 @@ export class PedidosComponent implements OnInit {
     componentRestrictions: { country: 'CL' }
   };
   precio_producto: number;
-  columna_pedido_activo: string[] = ['nombre_cliente', 'telefono_cliente', 'repartidor', 'direccion', 'monto_total'];
-  columna_pedido_realizado: string[] = ['nombre_cliente', 'telefono_cliente', 'repartidor', 'direccion', 'monto_total'];
+  columna_pedido_activo: string[] = ['nombre_cliente', 'telefono_cliente', 'repartidor', 'direccion','monto_total'];
+  columna_pedido_realizado: string[] = ['nombre_cliente', 'telefono_cliente', 'repartidor', 'direccion','monto_total'];
   dataSource_pedidos_activos: any;
   dataSource_pedidos_realizados: any;
+  opciones_alert:Array<any> = [
+    
+  ];
 
   @ViewChild('paginator_pedidos_activos') paginator_pedidos_activos: MatPaginator;
   @ViewChild('paginator_pedidos_realizados') paginator_pedidos_realizados: MatPaginator;
@@ -67,6 +71,15 @@ export class PedidosComponent implements OnInit {
     if(localStorage.getItem('nombre')){
       this.nombre = localStorage.getItem('nombre');
     }
+
+    this.db.collection('locales').doc(`${this.nombre}`).collection('comunas').valueChanges().subscribe(data=>{
+      if(data){
+        data.forEach(comuna =>{
+          this.inputOptions_comuna[`${comuna.nombre}`] = `${comuna.nombre}`
+        });
+      }
+    });
+
     this.db.collection('locales').doc(`${this.nombre}`).collection('pedidos').valueChanges().subscribe(data=>{ 
       var data_pedidos_activos:any = [];
       var data_pedidos_realizados:any = [];
@@ -154,22 +167,45 @@ export class PedidosComponent implements OnInit {
       });
       this.mostrarAlert(inputOptions, tipo_producto);
     });
-
   }
 
   mostrarAlert(inputOptions:any, tipo_producto:any){
 
     Swal.mixin({
       input: 'select',
-      inputValidator: function (value) {
-        return new Promise(function (resolve, reject) {
+      inputValidator:  (value) => {
+        return new Promise( (resolve, reject) => {
           if (value !== '') {
-            if(isNumber(value)){
-              console.log('Es un numero');
-              console.log(value)
+            console.log(typeof value)
+            console.log(value.length);
+            if(value.length <= 2){
+              console.log('es un numero');
+              var numero = parseInt(value);
+              console.log(numero);
+              if(numero <=10){
+                if(numero < 0){
+                  resolve('No puedes ingresar un numero negativo')
+                }else{
+                  if(numero === 0){
+                    resolve('Selecciona al menos 1 producto')
+                  }else{
+                    resolve();
+                  }
+                }
+              }else{
+                resolve('Maximo 10 productos por persona')
+              }
             }else{
-              console.log('Es un string')
-              console.log(value)
+              console.log('es un string')
+              if(value === 'reparto'){
+                Swal.insertQueueStep({
+                  title: 'Seleccione la comuna',
+                  text: 'su respuesta influirá en la entrega final del pedido',
+                  inputPlaceholder : 'comuna',
+                  input: 'select',
+                  inputOptions : this.inputOptions_comuna
+                }, 1)
+              }
             }
             resolve();
           } else {
@@ -194,33 +230,48 @@ export class PedidosComponent implements OnInit {
         inputOptions: {
           'reparto' : 'Reparto',
           'retiro' : 'Retiro en local'
-      }
-    },
-     {
+       }
+      } ,
+      {
         title: 'Seleccione el producto',
         text: 'su respuesta influirá en la entrega final del pedido',
         inputPlaceholder : 'Selecciona una opción',
         input: 'select',
         inputOptions: inputOptions
-    },
-    {
-      title: '¿Cuantos de este producto?',
-      text: 'su respuesta influirá en la entrega final del pedido',
-      inputPlaceholder : 'Cantidad',
-      input: 'number',
-    }
+        },
+        {
+        title: '¿Cuantos de este producto?',
+        text: 'su respuesta influirá en la entrega final del pedido',
+        inputPlaceholder : 'Cantidad',
+        input: 'number',
+        }
     ]).then((result) => {
       if (result.value) {
-        console.log('tipo local: ' + result.value);
-        this.db.collection('locales').doc(`${this.nombre}`).collection('catalogo').valueChanges().subscribe((data:any)=>{
-          data.forEach(producto =>{
-            if(producto.tipo_producto === tipo_producto){
-              if(producto.nombre_producto === result.value[1]){
-                this.openDialog(result.value[0], result.value[1], tipo_producto , result.value[2], producto.precio_producto);
+        console.log(result.value.length)
+        if(result.value.length > 3){
+          console.log('MAYOR QUE 3');
+          
+          this.db.collection('locales').doc(`${this.nombre}`).collection('catalogo').valueChanges().subscribe((data:any)=>{
+            data.forEach(producto =>{
+              if(producto.tipo_producto === tipo_producto){
+                if(producto.nombre_producto === result.value[2]){
+                  this.openDialog(result.value[0], result.value[2], tipo_producto , result.value[3], producto.precio_producto);
+                }
               }
-            }
-          })
-        });
+            })
+          });
+        }else{
+          console.log('tipo local: ' + result.value);
+          this.db.collection('locales').doc(`${this.nombre}`).collection('catalogo').valueChanges().subscribe((data:any)=>{
+            data.forEach(producto =>{
+              if(producto.tipo_producto === tipo_producto){
+                if(producto.nombre_producto === result.value[1]){
+                  this.openDialog(result.value[0], result.value[1], tipo_producto , result.value[2], producto.precio_producto);
+                }
+              }
+            })
+          });
+        }
       }
     });
   }

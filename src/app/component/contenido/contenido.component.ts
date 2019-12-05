@@ -434,7 +434,7 @@ export class ContenidoComponent {
   //Crear Ruta Optima segun los pedidos asignados al repartidor
   getDirection() {
     const Toast = Swal.mixin({
-      toast: true,
+        toast: true,
         position: 'top',
         showConfirmButton: false,
         timer: 3000
@@ -527,10 +527,12 @@ export class ContenidoComponent {
       type: 'warning',
       title: `dejando de seguir a ${this.nombreConductor} ${this.apellidoConductor}`
     });
+
     this.map.setZoom(16);
     this.nombreConductor = null;
     this.claveConductor = null;
     this.claveCompartir = null;
+    this.exitDirection();
 
   }
   //Compartir la ruta del conductor

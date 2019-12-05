@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import { faMapMarkerAlt, faStickyNote, faMapMarkedAlt, faBars, faSun, faMoon, faFileAlt,faTimesCircle, faSearch, faCoffee,faAlignJustify,faPowerOff,faCarAlt,faComments,faUser,faPhone,faAlignLeft, faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faChartBar,faStickyNote, faDesktop,faMapMarkedAlt, faBars, faSun, faMoon, faFileAlt,faTimesCircle, faSearch, faCoffee,faAlignJustify,faPowerOff,faCarAlt,faComments,faUser,faPhone,faAlignLeft, faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
 import { LoginVerificacionService } from 'src/app/services/login-verificacion.service';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
@@ -29,6 +29,7 @@ export class MainNavComponent implements OnDestroy{
   faStickyNote = faStickyNote;
   faMapMarkedAlt =faMapMarkedAlt;
   faMoon = faMoon;
+  faChartBar = faChartBar;
   faSun = faSun;
   icono = faSun;
   faBars = faBars;
@@ -38,6 +39,7 @@ export class MainNavComponent implements OnDestroy{
   faSearch = faSearch;
   faToggleOn = faToggleOn;
   faToggleOff = faToggleOff;
+  faDesktop = faDesktop;
   login:boolean = false;
   faAlignLeft = faAlignLeft;
   faPhone = faPhone;

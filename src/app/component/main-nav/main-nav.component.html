@@ -43,7 +43,7 @@
                     <div *ngFor="let conductor of conductores">
                         <!-- Este item de la lista se muestra solo si login es TRUE -->
                         <mat-nav-list *ngIf="login">
-                            <a mat-list-item *ngIf="mostrar && login" (click)="seguir(conductor)">
+                            <a mat-list-item *ngIf="mostrar && login" (click)="seguir(conductor); cerrar_menu(snav)">
                                 <fa-icon [icon]="faUser" style="padding-left: 17px"></fa-icon>
                                 <span style="padding-left: 15px;" class="aref"> <b>{{conductor.nombre}} {{conductor.apellido}}</b> </span>
                                 <mat-icon class="mat-icon" *ngIf="!conductor.online" svgIcon="iconoError" style="padding-left: 17px"></mat-icon>
@@ -73,12 +73,6 @@
                     </div> -->
                     <!--Fin Pedidos-->
                     <hr *ngIf="login">
-                    <mat-nav-list *ngIf="login">
-                        <a mat-list-item [routerLink]="['/chat']" (click)="cerrar_menu(snav)">
-                            <fa-icon [icon]="faComments"></fa-icon>
-                            <span matBadge="22" matBadgePosition="above after" matBadgeColor="warn" class="aref" style="padding-left: 15px;"> <b>chat</b> </span>
-                        </a>
-                    </mat-nav-list>
                     <mat-nav-list *ngIf="!login">
                         <a mat-list-item>
                             <fa-icon [icon]="faPowerOff"></fa-icon>
@@ -92,21 +86,33 @@
                         </a>
                     </mat-nav-list> -->
                     <mat-nav-list *ngIf="login">
-                        <a mat-list-item [routerLink]="['/pedidos']" (click)="cerrar_menu(snav)">
-                            <fa-icon [icon]="faStickyNote"></fa-icon>
-                            <span [matBadge]="pedidoTotal" matBadgePosition="above after" class="aref" matBadgeColor="warn" style="padding-left: 15px;"> <b>pedidos</b> </span>
-                        </a>
-                    </mat-nav-list>
-                    <mat-nav-list *ngIf="login">
                         <a mat-list-item [routerLink]="['/contenido']" (click)="cerrar_menu(snav)">
                             <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
                             <span style="padding-left: 15px;" class="aref"> <b>mapa</b> </span>
                         </a>
                     </mat-nav-list>
                     <mat-nav-list *ngIf="login">
+                        <a mat-list-item [routerLink]="['/pedidos']" (click)="cerrar_menu(snav)">
+                            <fa-icon [icon]="faStickyNote"></fa-icon>
+                            <span [matBadge]="pedidoTotal" matBadgePosition="above after" class="aref" matBadgeColor="warn" style="padding-left: 15px;"> <b>pedidos</b> </span>
+                        </a>
+                    </mat-nav-list>
+                    <mat-nav-list *ngIf="login">
                         <a mat-list-item [routerLink]="['/centro-control']" (click)="cerrar_menu(snav)">
-                            <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
-                            <span style="padding-left: 15px;" class="aref"> <b>centro de Control</b> </span>
+                            <fa-icon [icon]="faDesktop"></fa-icon>
+                            <span style="padding-left: 15px;" class="aref"> <b>panel de Control</b> </span>
+                        </a>
+                    </mat-nav-list>
+                    <mat-nav-list *ngIf="login">
+                        <a mat-list-item [routerLink]="['/chat']" (click)="cerrar_menu(snav)">
+                            <fa-icon [icon]="faComments"></fa-icon>
+                            <span matBadge="22" matBadgePosition="above after" matBadgeColor="warn" class="aref" style="padding-left: 15px;"> <b>chat</b> </span>
+                        </a>
+                    </mat-nav-list>
+                    <mat-nav-list position="end" *ngIf="login">
+                        <a mat-list-item (click)="cerrar_menu(snav)" [routerLink]="['/reportes']">
+                            <fa-icon [icon]="faChartBar"></fa-icon>
+                            <span style="padding-left: 15px;" class="aref"> <b>reportes</b> </span>
                         </a>
                     </mat-nav-list>
                     <mat-nav-list position="end" *ngIf="login">

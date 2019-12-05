@@ -24,9 +24,9 @@ export class CentroControlComponent implements OnInit {
   faCarAlt = faCarAlt;
   faUser = faUser;
 
-  columna_ingredientes: string[] = ['select','nombre', 'stock', 'precio'];
+  columna_ingredientes: string[] = ['select','nombre', 'precio'];
   columna_catalogo: string[] = ['tipo_producto', 'nombre', 'ingredientes', 'precio'];
-  columna_conductor: string[] = ['nombre', 'apellido', 'empresa', 'online'];
+  columna_conductor: string[] = ['nombre', 'apellido', 'compartir', 'online'];
   columna_cliente:string[] = ['nombre', 'direccion', 'telefono'];
 
   dataSource_ingredientes:any;
@@ -115,15 +115,6 @@ export class CentroControlComponent implements OnInit {
   agregarProducto(){
     Swal.mixin({
       input: 'text',
-      inputValidator: function (value) {
-        return new Promise(function (resolve, reject) {
-          if (value !== '') {
-            resolve();
-          } else {
-            resolve('Debes ingresar un valor');
-          }
-        });
-      },
       confirmButtonText: 'Siguiente &rarr;',
       progressSteps: ['1', '2', '3'],
       showCancelButton: true,
@@ -138,6 +129,38 @@ export class CentroControlComponent implements OnInit {
           title: 'Ingresa el nombre de tu nuevo producto',
           text: 'su respuesta influirá en la elavoración de los pedidos',
           allowOutsideClick: true,
+          input: 'text',
+          inputValidator: function (value) {
+            return new Promise(function (resolve, reject) {
+              if (value !== '') {
+                var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+                if(format.test(value)){
+                  resolve('No se permiten caracteres especiales');
+                }else{  
+                  if(isNaN(parseInt(value))){
+                    var regex = /\d+/g;
+                    if(value.match(regex)){
+                      console.log('hay numeros');
+                      resolve('No se permiten numeros')
+                    }else{
+                      console.log('no hay numeros')
+                      /* if(value.length){} */
+                      console.log(value.length);
+                      if(value.length > 30){
+                        resolve('Solo se permite un maximo de 30 caracteres');
+                      }else{
+                        resolve()
+                      }
+                    }
+                  }else{
+                    resolve('No se permiten numeros')
+                  }
+                }
+              } else {
+                resolve('Debes ingresar un valor');
+              }
+            });
+        }
         },
         {
           title: '¿Que tipo de producto es?',
@@ -157,6 +180,28 @@ export class CentroControlComponent implements OnInit {
           allowOutsideClick: false,
           showCancelButton: false,
           input: 'number',
+          inputValidator: (value)=>{
+            return new Promise((resolve, reject) =>{
+              if(value !== ''){
+                  var numero = parseInt(value);
+                  if(numero < 0 ){
+                    resolve('No puedes ingresar numeros negativos');
+                  }else{
+                    if(numero === 0){
+                      resolve('Ingresa algún precio')
+                    }else{
+                      if(value.length > 6){
+                        resolve('No se permiten mas 6 digitos')
+                      }else{
+                        resolve()
+                      }
+                    }
+                  }
+              }else{
+                resolve('Debes ingresar un valor')
+              }
+            });
+          }
         }
       ]
     ).then((result)=>{
@@ -171,15 +216,6 @@ export class CentroControlComponent implements OnInit {
   agregarIngrediente(){
     Swal.mixin({
       input: 'text',
-      inputValidator: function (value) {
-        return new Promise(function (resolve, reject) {
-          if (value !== '') {
-            resolve();
-          } else {
-            resolve('Debes ingresar un valor');
-          }
-        });
-      },
       confirmButtonText: 'Siguiente &rarr;',
       progressSteps: ['1','2','3'],
       showCancelButton: true,
@@ -194,6 +230,37 @@ export class CentroControlComponent implements OnInit {
           title: 'Ingresa el nombre de tu nuevo ingrediente',
           text: 'su respuesta influirá en la elavoración de los pedidos',
           allowOutsideClick: true,
+          inputValidator: function (value) {
+            return new Promise(function (resolve, reject) {
+              if (value !== '') {
+                var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+                if(format.test(value)){
+                  resolve('No se permiten caracteres especiales');
+                }else{  
+                  if(isNaN(parseInt(value))){
+                    var regex = /\d+/g;
+                    if(value.match(regex)){
+                      console.log('hay numeros');
+                      resolve('No se permiten numeros')
+                    }else{
+                      console.log('no hay numeros')
+                      /* if(value.length){} */
+                      console.log(value.length);
+                      if(value.length > 30){
+                        resolve('Solo se permite un maximo de 30 caracteres');
+                      }else{
+                        resolve()
+                      }
+                    }
+                  }else{
+                    resolve('No se permiten numeros')
+                  }
+                }
+              } else {
+                resolve('Debes ingresar un valor');
+              }
+            });
+        }
         }
       ,
         {
@@ -201,28 +268,78 @@ export class CentroControlComponent implements OnInit {
           text: 'su respuesta influirá en la elavoración de los pedidos',
           allowOutsideClick: false,
           input: 'number',
-          showCancelButton: false
-        }
-      ,
-        {
-          title: '¿Cual es el stock que tienen disponible?',
-          text: 'su respuesta influirá en la  elavoración de los pedidos',
-          allowOutsideClick: false,
-          input: 'number',
-          showCancelButton: false
+          showCancelButton: false,
+          inputValidator: (value)=>{
+            return new Promise((resolve, reject) =>{
+              if(value !== ''){
+                  var numero = parseInt(value);
+                  if(numero < 0 ){
+                    resolve('No puedes ingresar numeros negativos');
+                  }else{
+                    if(numero === 0){
+                      resolve('Ingresa algún precio')
+                    }else{
+                      if(value.length > 4){
+                        resolve('No se permiten mas 4 digitos')
+                      }else{
+                        resolve()
+                      }
+                    }
+                  }
+              }else{
+                resolve('Debes ingresar un valor')
+              }
+            });
+          }
         }
       ]
     ).then((result)=>{
       console.log(result.value)
       if(result.value){
-        this.afDb.collection('locales').doc(`${this.nombre}`).collection('ingredientes').doc(`${result.value[0]}`).set({
-          nombre: result.value[0],
-          precio: result.value[1],
-          stock: result.value[2]
-        }).then(()=>{
-          console.log('creado con exito');
-          
-        })
+        Swal.fire({
+          title: 'Atención',
+          text: 'Estas seguro de crear este ingrediente',
+          showConfirmButton: true,
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Aceptar',
+          cancelButtonColor: 'red',
+          allowOutsideClick: false,
+          type: 'question'
+        }).then((respuesta)=>{
+          console.log(respuesta)
+          if(respuesta.value){
+
+            this.afDb.collection('locales').doc(`${this.nombre}`).collection('ingredientes').doc(`${result.value[0]}`).set({
+              nombre: result.value[0],
+              precio: result.value[1],
+            }).then(()=>{
+              console.log('creado con exito');
+              const toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000
+              });
+              toast.fire({
+                type: 'success',
+                title: 'ingrediente creado con exito'
+              })
+            })
+          }else{
+            console.log('Cancelar');
+            const toast = Swal.mixin({
+              toast: true,
+              position: 'top',
+              showConfirmButton: false,
+              timer: 3000
+            });
+            toast.fire({
+              type: 'error',
+              title: 'No se creo el ingrediente'
+            })
+          }
+        })  
       }else{
         return false
       }
@@ -266,21 +383,35 @@ export class DialogOverviewExampleDialog {
       type: 'info'
     }).then((result)=>{
       console.log(result)
-        if(result.value){
+      const toast = Swal.mixin({
+        toast: true,
+        timer: 3000,
+        position: 'top',
+        showConfirmButton: false
+      });
 
-          this.afDb.collection('locales').doc(`${this.nombre}`).collection('catalogo').add({
-            ingredientes: this.seleccion_ingredientes,
-            nombre_producto: this.data.nombre_producto,
-            precio_producto: this.data.precio_producto,
-            tipo_producto: this.data.tipo_producto
-          }).then(()=>{
-            console.log('Creado con exito!');
-            this.dialogRef.close();
+      if(result.value){
+        this.afDb.collection('locales').doc(`${this.nombre}`).collection('catalogo').add({
+          ingredientes: this.seleccion_ingredientes,
+          nombre_producto: this.data.nombre_producto,
+          precio_producto: this.data.precio_producto,
+          tipo_producto: this.data.tipo_producto
+        }).then(()=>{
+          console.log('Creado con exito!');
+          this.dialogRef.close();
+          toast.fire({
+            type: 'success',
+            title: 'Producto creado con exito'
           })
-
-        }else{
-          return false
-        }
+        });
+      }else{
+        toast.fire({
+          type: 'warning',
+          title: 'No se creo el producto'
+        })
+        
+        return false
+      }
     })
   }
 
