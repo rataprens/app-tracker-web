@@ -16,18 +16,15 @@ export class ReportesComponent implements OnInit {
   lng: number = 7.809007;
   map:any;
 
-  title = 'Browser market shares at a specific website, 2014';
+  title = 'Aqui podras visualizar cuantas ventas tienen tus productos';
   type:string = 'PieChart';
 
   data = [
-    ['Firefox', 45.0],
-    ['IE', 26.8],
-    ['Chrome', 12.8],
-    ['Safari', 8.5],
-    ['Opera', 6.2],
-    ['Others', 0.7] 
+    ['italiano', 45],
+    ['aleman', 26],
+    ['tradicional', 12], 
   ];
-  columnNames = ['Browser', 'Percentage'];
+  columnNames = ['Producto', 'Porcentaje'];
   options = {
     colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'], 
     is3D: true
@@ -55,14 +52,11 @@ export class ReportesComponent implements OnInit {
   cambiarGrafico(evento:any){
     console.log(evento)
     if(evento.value == 'BubbleChart'){
-      this.columnNames = ['Browser', 'Percentage', 'Another'];
+      this.columnNames = ['Producto', 'Porcentaje', 'Otro'];
       this.data = [
-        ['Firefox', 45.0, 22],
-        ['IE', 26.8, 12],
-        ['Chrome', 12.8, 10],
-        ['Safari', 8.5, 8],
-        ['Opera', 6.2, 20],
-        ['Others', 1.7, 15] 
+        ['italiano', 45, 2],
+        ['aleman', 26, 12],
+        ['tradicional', 12, 18], 
       ];
       this.width = 600;
       this.height = 501;

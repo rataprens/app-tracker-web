@@ -368,7 +368,7 @@ export class PedidosComponent implements OnInit {
 
   openDialog(tipo_entrega:string, nombre_producto:string, tipo_producto:string, cantidad:number, precio_producto:number){
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog2, {
-      width: '700px',
+      width: '900px',
       height: '600px',
       data: {tipo_entrega: tipo_entrega, nombre_producto: nombre_producto, tipo_producto: tipo_producto, cantidad: cantidad, precio_producto:precio_producto},
       disableClose: true
@@ -433,6 +433,11 @@ export class DialogOverviewExampleDialog2 {
   monto_total:any;
   inputOptions:any = {};
   pedidos:any = [];
+  conductores_selected:any;
+  conductores:any = [];
+  nombre_cliente:string;
+  telefono_cliente:string;
+  direccion_cliente:string;
   @ViewChild('select_ingrediente') select :MatSelect;
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog2>,
@@ -442,6 +447,11 @@ export class DialogOverviewExampleDialog2 {
       this.afDb.collection('locales').doc(`${this.nombre}`).collection('ingredientes').valueChanges().subscribe((data)=>{
         this.dataSource_ingredientes = data;
       });
+      
+      this.afDb.collection('locales').doc(`${this.nombre}`).collection('movil').valueChanges().subscribe((data:any)=>{
+        console.log(data)
+        this.conductores = data;
+      })
       
       this.pedidos.push({
         ingredientes: this.seleccion_ingredientes,
@@ -478,11 +488,15 @@ export class DialogOverviewExampleDialog2 {
     }
 
   onNoClick(){
-    console.log(this.data.precio_producto)
+    console.log(this.conductores_selected)
+    if(this.conductores_selected){
+      console.log('conductor seleccionado')
+      console.log(this.monto_total)
     console.log(this.seleccion_ingredientes)
+    console.log(this.pedidos)
     Swal.fire({
       title: 'Atención',
-      text: '¿Está seguro de crear este producto?',
+      text: '¿Está seguro de crear este pedido?',
       showConfirmButton: true,
       showCancelButton: true,
       confirmButtonText : 'Aceptar',
@@ -494,20 +508,69 @@ export class DialogOverviewExampleDialog2 {
       console.log(result)
         if(result.value){
 
-          this.afDb.collection('locales').doc(`${this.nombre}`).collection('catalogo').add({
-            ingredientes: this.seleccion_ingredientes,
-            nombre_producto: this.data.nombre_producto,
-            precio_producto: this.data.precio_producto,
-            tipo_producto: this.data.tipo_producto
-          }).then(()=>{
-            console.log('Creado con exito!');
-            this.dialogRef.close();
-          })
+          if(this.nombre_cliente && this.telefono_cliente){
+            var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+            if(format.test(this.nombre_cliente)){
+              Swal.fire({
+                title: 'Atención',
+                text: 'No se permiten caracteres especiales',
+                type: 'warning'
+              })
+            }else if(format.test(this.direccion_cliente)){
+              Swal.fire({
+                title: 'Atención',
+                text: 'No se permiten caracteres especiales',
+                type: 'warning'
+              })
+            }else{
+              
+              console.log('permitido');
+            }
+            this.afDb.collection('locales').doc(`${this.nombre}`).collection('movil').doc(`${this.conductores_selected}`).get().subscribe((data:any)=>{
+              var conductor = data.data()
+              console.log(conductor)
+              console.log(this.data.tipo_producto,this.monto_total,this.data.nombre_producto,this.seleccion_ingredientes, this.nombre_cliente, this.telefono_cliente, this.direccion_cliente, this.conductores_selected)
+              this.afDb.collection('locales').doc(`${this.nombre}`).collection('pedidos').add({
+                nombre_cliente: this.nombre_cliente,
+                telefono_cliente: this.telefono_cliente,
+                direccion: this.direccion_cliente,
+                clave_repartidor: this.conductores_selected,
+                entregado: false,
+                nombre_repartidor: `${conductor.nombre} ${conductor.apellido}`,
+                ingredientes: this.seleccion_ingredientes,
+                nombre_producto: this.data.nombre_producto,
+                monto_total: this.monto_total,
+                tipo_producto: this.data.tipo_producto
+              }).then(()=>{
+                console.log('Creado con exito!');
+                this.dialogRef.close();
+              })
+            })
+  
+            
+          }else{
+            Swal.fire({
+              title: 'Atención',
+              text: 'Complete todos los campos requeridos',
+              type: 'warning'
+            })
+            console.log('no permitido');
+            
+          }
 
         }else{
           return false
         }
     })
+    }else{
+      Swal.fire({
+        title: 'Atención',
+        text: 'Debe seleccionar un repartidor para poder finalizar el pedido',
+        type: 'info',
+        showConfirmButton: true,
+        confirmButtonText: 'Ok'
+      })
+    }
   }
 
   agregarNuevoProducto(){
@@ -628,6 +691,8 @@ export class DialogOverviewExampleDialog2 {
               });
               this.select.value = '';
               this.selected = "";
+              var monto_total:number = parseInt(this.monto_total) + parseInt(data.precio)
+              this.monto_total = monto_total
               console.log(this.seleccion_ingredientes)
             }, (err)=>{
               console.log(JSON.stringify(err))

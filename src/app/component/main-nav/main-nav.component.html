@@ -103,12 +103,12 @@
                             <span style="padding-left: 15px;" class="aref"> <b>panel de Control</b> </span>
                         </a>
                     </mat-nav-list>
-                    <mat-nav-list *ngIf="login">
+ <!--                    <mat-nav-list *ngIf="login">
                         <a mat-list-item [routerLink]="['/chat']" (click)="cerrar_menu(snav)">
                             <fa-icon [icon]="faComments"></fa-icon>
                             <span matBadge="22" matBadgePosition="above after" matBadgeColor="warn" class="aref" style="padding-left: 15px;"> <b>chat</b> </span>
                         </a>
-                    </mat-nav-list>
+                    </mat-nav-list> -->
                     <mat-nav-list position="end" *ngIf="login">
                         <a mat-list-item (click)="cerrar_menu(snav)" [routerLink]="['/reportes']">
                             <fa-icon [icon]="faChartBar"></fa-icon>

@@ -5,8 +5,8 @@
         <h1 mat-dialog-title class="aref">¡ultimos pasos, ¿deseas agregar ingredientes extras?!</h1>
    </mat-grid-tile>
     <mat-grid-tile colspan="1" style=" width:20vw">
-      <button mat-button (click)="verIngredientes()" style="width: 20px; margin-right:10vw; border-radius: 50%">
-        <mat-icon style="  ">add</mat-icon>
+      <button mat-raised-button color="primary" (click)="verIngredientes()" style=" margin-right:8vw; border-radius: 50%; margin-bottom:2vh">
+        <mat-icon>add</mat-icon>
       </button>
     </mat-grid-tile>
   </mat-grid-list>
@@ -33,30 +33,9 @@
   </div>
 
   <hr>
-  <mat-card style="  ">
-    
-      <span class="aref" style="font-size:15px; right: 0;"><b><u>Datos cliente</u></b></span>
-      <mat-grid-list cols="4" rowHeight="200px" style="">
-        <mat-grid-tile colspan="3" style="">
-            <div class="example-container" style="margin-right:15vw">
-                <mat-form-field style="margin-left:10px; width:100%">
-                  <input matInput type="number" placeholder="Telefono">
-                  <span matPrefix>+569 &nbsp;</span>
-                </mat-form-field>
-              
-                <mat-form-field style="margin-left:10px; width:100%">
-                    <input matInput placeholder="Nombre Cliente">
-                </mat-form-field>
 
-                <mat-form-field style="margin-left:10px; width:100%" *ngIf="data.tipo_entrega === 'reparto'">
-                    <input matInput placeholder="Dirección">
-                </mat-form-field>
-              </div>
-        </mat-grid-tile>
-      </mat-grid-list>
-  </mat-card>
-  
-  <mat-card style="height:30vh;  ">
+
+  <mat-card style="height:30vh;  " class="mat-elevation-z8">
     
     <span class="aref" style="font-size:15px; right: 0;"><b><u>Detalle del pedido</u></b></span>
     <mat-grid-list cols="4" rowHeight="150px" style="">
@@ -78,10 +57,58 @@
         <mat-list>
           <mat-list-item style="margin-left:30px; height: 30px;"><span class="aref" style="font-size:12px"><b><u>Otras opciones</u></b></span></mat-list-item>
           <mat-list-item style="height:40px; margin-left:10px"><button mat-raised-button color="primary" (click)="agregarNuevoProducto()">Agregar otro producto</button></mat-list-item>
-          <mat-list-item style="height:40px; margin-left:10px"><button mat-raised-button color="primary" (click)="onNoClick()" cdkFocusInitial> <span class="aref">Terminado!</span> </button></mat-list-item>
-          <mat-list-item style="height:40px; margin-left:10px"> <button mat-button color="primary" (click)="salirModal()" style="width:10vw; height:3vh"> <span class="aref" style="font-size:10px"> <b>Quiero salir!</b> </span> </button></mat-list-item>
+          <mat-list-item style="margin-top:2.4vh">
+            <mat-form-field style="width:20vw">
+              <mat-label>Selecciona un repartidor</mat-label>
+              <mat-select [(value)]="conductores_selected">
+                <mat-option *ngFor="let conductor of conductores" value="{{conductor.clave}}">{{conductor.nombre}} {{conductor.apellido}} </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-list-item>
+          
         </mat-list>
       </mat-grid-tile>
     </mat-grid-list>
-  </mat-card> 
+  </mat-card>
+
+  <hr>
+
+  <mat-card style="  " class="mat-elevation-z8"> 
+    
+    <span class="aref" style="font-size:15px; right: 0;"><b><u>Datos cliente</u></b></span>
+    <mat-grid-list cols="4" rowHeight="200px" style="">
+      <mat-grid-tile colspan="2" style="">
+          <div class="example-container" style="margin-right:15vw">
+              <mat-form-field style="margin-left:30px; width:100%">
+                <input style="width:100%" matInput type="number" placeholder="Telefono" [(ngModel)]="telefono_cliente">
+                <span matPrefix>+569 &nbsp;</span>
+              </mat-form-field>
+            
+              <mat-form-field style="margin-left:30px; width:100%">
+                  <input style="width:100%" matInput placeholder="Nombre Cliente" [(ngModel)]="nombre_cliente">
+              </mat-form-field>
+
+              <mat-form-field style="margin-left:30px; width:100%" *ngIf="data.tipo_entrega === 'reparto'" >
+                  <input style="width:100%" matInput placeholder="Dirección" [(ngModel)]="direccion_cliente">  
+              </mat-form-field>
+            </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="2" style="width:30vw; ">
+        <mat-card class="mat-elevation-z8" style="border-radius:10px">
+          <mat-card-header>
+            <mat-card-title style="font-size:1.6vw;"> <u>Antecedentes</u> </mat-card-title>
+            <mat-card-subtitle> no se reconoce ningun antecedente</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+          
+          </mat-card-content>
+          <mat-card-actions>
+           <!--  <button mat-button>Ok</button> -->
+          </mat-card-actions>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+</mat-card>
+<mat-list-item style="height:40px; margin-left:10px"><button mat-raised-button color="primary" (click)="onNoClick()" cdkFocusInitial> <span class="aref">Terminado!</span> </button></mat-list-item>
+<mat-list-item style="height:40px; margin-left:10px"> <button mat-button color="primary" (click)="salirModal()" style="width:10vw; height:3vh"> <span class="aref" style="font-size:10px"> <b>Quiero salir!</b> </span> </button></mat-list-item>
 </div>

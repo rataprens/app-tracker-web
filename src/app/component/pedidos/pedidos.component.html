@@ -41,15 +41,12 @@
           
             <mat-paginator #paginator_pedidos_activos [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
           </div>
-          <div *ngIf="dataSource_pedidos_activos.data < 1"  style="width:93%; margin-left:3vw;height: 50vh;">
-            <mat-card style="height:30vh; width:50vw; margin-left:22vw; border-radius:10px" class="mat-elevation-z8 w3-center animated fadeInDown">
+          <div *ngIf="dataSource_pedidos_activos.data < 1"  style="width:93%; margin-left:3vw;height: 60vh;">
+            <mat-card style="height:30vh; width:55vw; margin-left:22vw; border-radius:10px" class="mat-elevation-z8 w3-center animated fadeInDown">
               <mat-card-header>
-                <mat-card-title style="margin-left:6vw; font-size: 30px"> <span class="aref">¡Aun no tienes pedidos activos!</span> </mat-card-title>
-                <mat-card-subtitle style="margin-left:6vw; margin-top:3vh"> <span class="aref"> Puedes crear tus pedidos en la sección <strong style="font-size:15px"> <span class="aref"> nuevo pedido</span></strong></span> <fa-icon style="margin-top:0.3vh;margin-left:3px" [icon]="faPlusCircle"></fa-icon></mat-card-subtitle>
+                <mat-card-title style="margin-left:5vw; font-size: 2.5vw"> <span class="aref">¡Aun no tienes pedidos activos!</span> </mat-card-title>
+                <mat-card-subtitle style="margin-left:5vw; margin-top:3vh; font-size:1.5vw"> <span class="aref"> Puedes crear tus pedidos en la sección <strong style="font-size:15px"> <span class="aref"> nuevo pedido</span></strong></span> <fa-icon style="margin-top:0.3vh;margin-left:3px" [icon]="faPlusCircle"></fa-icon></mat-card-subtitle>
               </mat-card-header>
-              <mat-card-content>
-              
-              </mat-card-content>
               <mat-card-actions>
                 <button mat-raised-button color="primary" (click)="irNuevoPedido(mattab)">Ir &rarr;</button>
               </mat-card-actions>
@@ -97,6 +94,14 @@
             </table>
           
             <mat-paginator #paginator_pedidos_realizados [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+        <div *ngIf="dataSource_pedidos_realizados.data < 1"  style="width:93%; margin-left:3vw;height: 60vh;">
+          <mat-card style="height:23vh; width:55vw; margin-left:22vw; border-radius:10px" class="mat-elevation-z8 w3-center animated fadeInDown">
+            <mat-card-header>
+              <mat-card-title style="margin-left:5vw; font-size: 2.5vw"> <span class="aref">¡Aun no tienes pedidos realizados!</span> </mat-card-title>
+              <mat-card-subtitle style="margin-left:5vw; margin-top:3vh; font-size:1.5vw"> <span class="aref"> Espera a que tus repartidores entreguen los pedidos</span></mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
         </div>
     </mat-tab>
     <mat-tab>
