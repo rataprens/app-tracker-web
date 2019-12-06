@@ -1,4 +1,62 @@
+<mat-tab-group dynamicHeight>
+  <mat-tab>
+    <ng-template mat-tab-label >
+      <span class="aref" style="font-size:13px"><b> graficos</b> </span> &nbsp;
+      <fa-icon style="margin-top:0.3vh" [icon]="faChartPie"></fa-icon>
+    </ng-template>
+    <div class="container">
+      <mat-card>
+          <mat-form-field style="margin-left:20%">
+              <mat-label>Selecciona un grafico</mat-label>
+              <mat-select disableRipple [(value)]="type" (selectionChange)="cambiarGrafico($event)">
+                <mat-option value="PieChart">Grafico tipo Pie</mat-option>
+                <mat-option value="BubbleChart">Grafico tipo burbujas</mat-option>
+              </mat-select>
+            </mat-form-field>
+          <google-chart #chart
+          [title]="title"
+          [type]="type"
+          [data]="data"
+          [columnNames]="columnNames"
+          [options]="options"
+          [width]="width"
+          [height]="height">
+          </google-chart>
+      </mat-card>
+    </div>
+  </mat-tab>
+  <mat-tab >
+    <ng-template mat-tab-label >
+      <span class="aref" style="font-size:13px"><b> mapa calorico</b> </span> &nbsp;
+      <fa-icon style="margin-top:0.3vh" [icon]="faGlobeAmericas"></fa-icon>
+    </ng-template>
+    <div class="container">
+      <agm-map (mapReady)="mapReady($event)" [latitude]="lat" [longitude]="lng" [zoom]="14" [streetViewControl]="false" >
+        <agm-marker [latitude]="lat" [longitude]="lng">
 
-<div class="container">
-  <mat-card>Simple card</mat-card>
-</div>
+        </agm-marker>
+            
+        <agm-circle [latitude]="-36.788485" [longitude]="-73.100885" 
+        [radius]="500"
+        [fillColor]="'red'"
+        [circleDraggable]="false"
+        [editable]="false">
+        </agm-circle>
+
+        <agm-circle [latitude]="-36.77369" [longitude]="-73.088221" 
+        [radius]="700"
+        [fillColor]="'red'"
+        [circleDraggable]="false"
+        [editable]="false"
+        (circleClick)="circuloClick($event)">
+        </agm-circle>
+      </agm-map>
+    </div>
+  </mat-tab>
+  <mat-tab >
+      <ng-template mat-tab-label >
+        <span class="aref" style="font-size:13px"><b> reportes</b> </span> &nbsp;
+        <fa-icon style="margin-top:0.3vh" [icon]="faFilePdf"></fa-icon>
+      </ng-template>
+    </mat-tab>
+</mat-tab-group>

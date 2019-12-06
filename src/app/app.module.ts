@@ -45,6 +45,8 @@ import { SimplebarAngularModule } from 'simplebar-angular';
 import { AgregarNuevoProductoService } from './services/agregar-nuevo-producto.service';
 import { ReportesComponent } from './component/reportes/reportes.component';
 
+import { GoogleChartsModule } from 'angular-google-charts';
+
 
 @NgModule({
   declarations: [
@@ -101,7 +103,8 @@ import { ReportesComponent } from './component/reportes/reportes.component';
     MatPaginatorModule,
     MatTableModule,
     SimplebarAngularModule,
-    MatDialogModule
+    MatDialogModule,
+    GoogleChartsModule.forRoot()
   ],
   entryComponents: [BottomSheetOverviewExampleSheet, PedidosComponent, DialogOverviewExampleDialog, DialogOverviewExampleDialog2],
   providers: [

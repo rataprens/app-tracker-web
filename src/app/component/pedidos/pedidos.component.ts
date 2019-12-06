@@ -117,12 +117,6 @@ export class PedidosComponent implements OnInit {
     console.log(this.tipo_local);
     console.log(this.nombre);
 
-  /*   this.db.collection('locales').doc(`${this.nombre}`).collection('pedidos').valueChanges().subscribe(data=>{
-      if(data){
-          this.pedidos = data;
-      }
-    }); */
-
     this.auth.getPedidos(this.nombre).subscribe((data:any[])=>{
       this.pedidos = data;
       this.pedidosActivos = this.pedidos.filter(pedido => pedido.entregado === false);
@@ -135,6 +129,8 @@ export class PedidosComponent implements OnInit {
         this.conductores = data;
     });
    }
+
+   //FIN CONSTRUCTOR
 
   ngOnInit() {
     this.pedidoFormulario = this.formBuilder.group({
@@ -167,6 +163,11 @@ export class PedidosComponent implements OnInit {
       });
       this.mostrarAlert(inputOptions, tipo_producto);
     });
+  }
+
+  irNuevoPedido(mattab:any){
+    console.log(mattab)
+    mattab.selectedIndex = 2
   }
 
   mostrarAlert(inputOptions:any, tipo_producto:any){
@@ -233,11 +234,17 @@ export class PedidosComponent implements OnInit {
        }
       } ,
       {
-        title: 'Seleccione el producto',
+        title: `Seleccione el producto`,
         text: 'su respuesta influirá en la entrega final del pedido',
-        inputPlaceholder : 'Selecciona una opción',
+        inputPlaceholder : `Selecciona un ${tipo_producto}`,
         input: 'select',
-        inputOptions: inputOptions
+        inputOptions: inputOptions,
+        onOpen: (value)=>{
+          var select = value;
+          select.onchange = (result:any)=>{
+            console.log(result.srcElement.value)
+          }
+        }
         },
         {
         title: '¿Cuantos de este producto?',

@@ -1,14 +1,14 @@
-<mat-tab-group dynamicHeight>
+<mat-tab-group  #mattab>
     <mat-tab>
-      <ng-template mat-tab-label >
+        <ng-template mat-tab-label >
           <span class="aref" style="font-size:13px"><b> pedidos activos</b> </span> &nbsp;
             <fa-icon style="margin-top:0.3vh" [icon]="faClock"></fa-icon>
         </ng-template>
         <div style="height:2vh">
 
-          </div>
-        <div class="mat-elevation-z8" style="width:93%; margin-left:3vw; border-radius: 10px">
-            <table mat-table [dataSource]="dataSource_pedidos_activos" style="width:100%; border-radius: 10px">
+        </div>
+        <div *ngIf="dataSource_pedidos_activos.data.length > 0" style="width:93%; margin-left:3vw; border-radius: 10px; height: 60vh;">
+            <table  class="mat-elevation-z8" mat-table [dataSource]="dataSource_pedidos_activos" style="width:100%; border-radius: 10px">
        
               <ng-container matColumnDef="nombre_cliente">
                 <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre Cliente</b></span>  </th>
@@ -41,17 +41,31 @@
           
             <mat-paginator #paginator_pedidos_activos [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
           </div>
+          <div *ngIf="dataSource_pedidos_activos.data < 1"  style="width:93%; margin-left:3vw;height: 50vh;">
+            <mat-card style="height:30vh; width:50vw; margin-left:22vw; border-radius:10px" class="mat-elevation-z8 w3-center animated fadeInDown">
+              <mat-card-header>
+                <mat-card-title style="margin-left:6vw; font-size: 30px"> <span class="aref">¡Aun no tienes pedidos activos!</span> </mat-card-title>
+                <mat-card-subtitle style="margin-left:6vw; margin-top:3vh"> <span class="aref"> Puedes crear tus pedidos en la sección <strong style="font-size:15px"> <span class="aref"> nuevo pedido</span></strong></span> <fa-icon style="margin-top:0.3vh;margin-left:3px" [icon]="faPlusCircle"></fa-icon></mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+              
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="irNuevoPedido(mattab)">Ir &rarr;</button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
     </mat-tab>
     <mat-tab>
         <ng-template mat-tab-label>
             <span class="aref" style="font-size:13px"><b> pedidos realizados</b> </span>&nbsp;
             <fa-icon style="margin-top:0.3vh" [icon]="faCheckSquare"></fa-icon>
         </ng-template>
-        <div style="height:2vh">
+        <div style="height:1vh">
 
         </div>
-        <div class="mat-elevation-z8" style="width:93%; margin-left:3vw; border-radius: 10px">
-            <table mat-table [dataSource]="dataSource_pedidos_realizados" style="width:100%">
+        <div *ngIf="dataSource_pedidos_realizados.data.length > 0"  style="width:93%; margin-left:3vw; border-radius: 10px; height: 60vh;">
+            <table class="mat-elevation-z8" mat-table [dataSource]="dataSource_pedidos_realizados" style="width:100%">
           
               <ng-container matColumnDef="nombre_cliente">
                   <th mat-header-cell *matHeaderCellDef> <span class="aref"><b>Nombre Cliente</b></span>  </th>
